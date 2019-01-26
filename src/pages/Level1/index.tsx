@@ -4,11 +4,19 @@ import {
 } from 'react-router-dom';
 
 import assets from '../../assets';
+import Modal from '../../component/Modal';
+
+enum GameState {
+  confirm = 1,
+  gaming,
+  result,
+}
 
 interface IPropTypes extends RouteComponentProps<{sub: string}> {
 }
 
 interface IStateTypes {
+  gameState: GameState,
   items: {[name:string]: {
       zIndex: number,
       ref: React.Ref<any>,
@@ -20,6 +28,7 @@ interface IStateTypes {
 
 class Level1 extends React.Component<IPropTypes, IStateTypes> {
   state = {
+    gameState: GameState.confirm,
     items: {
       gameboy: {
         zIndex: 100,
@@ -72,25 +81,36 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     this.cachedY = parseInt(ref.current.style.top);
   }
   public render() {
-    return <div
-      className="bg"
-      onMouseMove={this.onMouseMove}
-      onMouseUp={this.onMouseUp}
-    >
-      {
-        Object.keys(this.state.items).map(i => <div
-          className={i}
-          ref={this.state.items[i].ref}
-          style={{
-            position: 'absolute',
-            left: this.state.items[i].x,
-            zIndex: this.state.items[i].zIndex,
-            top: this.state.items[i].y,
-          }}
-          onMouseDown={(e) => this.itemOnMouseDown(e, i)}
-        />)
-      }
-    </div>;
+    if (this.state.gameState === GameState.confirm) {
+      return <Modal show={true} closeOnClick={() => {console.log('x')}}>
+        <div>关卡挑战目标</div>
+        <div>1.把游戏机放回原位</div>
+        <div>2.观看电视不少于5s</div>
+        <div>3.满足关卡快乐值</div>
+        <button onClick={() => this.setState({gameState: GameState.gaming})}>start</button>
+      </Modal>;
+    }
+    if (this.state.gameState === GameState.gaming) {
+      return <div
+        className="bg"
+        onMouseMove={this.onMouseMove}
+        onMouseUp={this.onMouseUp}
+      >
+        {
+          Object.keys(this.state.items).map(i => <div
+            className={i}
+            ref={this.state.items[i].ref}
+            style={{
+              position: 'absolute',
+              left: this.state.items[i].x,
+              zIndex: this.state.items[i].zIndex,
+              top: this.state.items[i].y,
+            }}
+            onMouseDown={(e) => this.itemOnMouseDown(e, i)}
+          />)
+        }
+      </div>;
+    }
   }
 }
 
