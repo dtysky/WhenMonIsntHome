@@ -10,7 +10,7 @@ const assets: IResourceEntry[] = [
   {
     preload: true,
     name: 'ui-select',
-    src: require('./ui-select.jpg'),
+    src: require('./ui-select.png'),
     type: 'image',
     weight: 26
   },
