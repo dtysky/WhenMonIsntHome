@@ -25,6 +25,7 @@ class Timer {
     this.onUpdate = onUpdate;
     this.total = total;
     this.t = 0;
+    this.pre = 0;
     this.started = true;
   }
 

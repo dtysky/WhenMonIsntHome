@@ -9,12 +9,28 @@ import ResourceManager, {IResourceEntry} from 'res-manager';
 const assets: IResourceEntry[] = [
   {
     preload: true,
-    name: 'ui-select',
-    src: require('./ui-select.jpg'),
+    name: 'sofa',
+    src: require('./sofa.png'),
     type: 'image',
     weight: 26
   },
 ];
+
+[
+  'button-back', 'confirm-ui', 'door', 'level-selcet', 'level1_background',
+  'level1_background', 'level1_desk_withconlcle', 'level1_desk', 'level1_shelf_withconcle',
+  'level1_shelf', 'level1_sofa_withconcle', 'mom-come-soon', 'progress-bar',
+  'progress-box', 'result-bg', 'shoes1', 'shoes2', 'sofa',
+  'star-one', 'star-three', 'star-two', 'star-yellow', 'star'
+].forEach(name => {
+  assets.push({
+    preload: true,
+    name,
+    src: `require('./${name}')`,
+    type: 'image',
+    weight: 1
+  })
+})
 
 const resManager = new ResourceManager();
 resManager.init(assets);
