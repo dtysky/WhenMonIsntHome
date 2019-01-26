@@ -19,7 +19,9 @@ interface IPropTypes extends RouteComponentProps<{sub: string}> {
 interface IStateTypes {
   gameState: GameState,
   progress: number,
+  tvOn: boolean,
   items: {[name:string]: {
+      static?: boolean,
       zIndex: number,
       ref: React.Ref<any>,
       x: number,
@@ -32,6 +34,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   state = {
     gameState: GameState.confirm,
     progress: 0,
+    tvOn: false,
     items: {
       gameboy: {
         zIndex: 100,
@@ -44,6 +47,13 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         x: 60,
         y: 200,
         ref: React.createRef(),
+      },
+      tv: {
+        static: true,
+        zIndex: 99,
+        x: 110,
+        y: 200,
+        ref: React.createRef(),
       }
     }
   }
@@ -53,21 +63,23 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   isDragging = false;
   mouseDownX;
   mouseDownY;
+  zIndexMap = {};
   cachedX;
   cachedY;
   draggingItem;
   onMouseMove = (e) => {
-    if (!this.isDragging) {
+    if (!this.isDragging || this.state.items[this.draggingItem].static) {
       return;
     }
-    const x = e.pageX;
-    const y = e.pageY;
+    console.log(this.draggingItem);
+    const x = e.pageX || e.touches[0].pageX;
+    const y = e.pageY || e.touches[0].pageY;
     const diffX = x - this.mouseDownX;
     const diffY = y - this.mouseDownY;
     const items = this.state.items;
     items[this.draggingItem].x = this.cachedX + diffX + 'px';
     items[this.draggingItem].y = this.cachedY + diffY + 'px';
-    Object.keys(items).forEach(i => items[i].zIndex--);
+    Object.keys(items).forEach(i => this.zIndexMap[i]);
     items[this.draggingItem].zIndex = 100 + Object.keys(items).length - 1;
     this.forceUpdate();
   }
@@ -87,7 +99,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
           gameState: GameState.timeout,
         });
       }
-    }, 100);
+    }, 16);
     this.setState({
       gameState: GameState.gaming,
       progress: 0,
@@ -95,13 +107,19 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   }
   itemOnMouseDown = (e, itemName) => {
     this.isDragging = true;
-    this.mouseDownX = e.pageX;
-    this.mouseDownY = e.pageY;
+    this.mouseDownX = e.pageX || e.touches[0].pageX;
+    this.mouseDownY = e.pageY || e.touches[0].pageY;
     this.draggingItem = itemName;
     const ref = this.state.items[itemName].ref;
     this.cachedX = parseInt(ref.current.style.left);
     this.cachedY = parseInt(ref.current.style.top);
+    const items = this.state.items;
+    Object.keys(items).forEach(i => this.zIndexMap[i] = items[i].zIndex);
   }
+  checkpoints = {
+    tv: false,
+  };
+  tvTimer;
   public render() {
     if (this.state.gameState === GameState.confirm) {
       return <Modal show={true} closeOnClick={() => {console.log('x')}}>
@@ -115,8 +133,10 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     if (this.state.gameState === GameState.gaming) {
       return <div
         className="bg"
+        onTouchMove={this.onMouseMove}
         onMouseMove={this.onMouseMove}
         onMouseUp={this.onMouseUp}
+        onTouchEnd={this.onMouseUp}
       >
         <div className="progress">
           <div className="progress-bar" style={{width: this.state.progress + '%'}}/>
@@ -124,7 +144,24 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         {
           Object.keys(this.state.items).map(i => <div
             className={i}
+            key={i}
             ref={this.state.items[i].ref}
+            onClick={(e) => {
+              if (i === 'tv') {
+                clearTimeout(this.tvTimer);
+                if (!this.state.tvOn) {
+                  (this.state.items[i].ref.current as HTMLElement).setAttribute('class', 'tv on');
+                  this.tvTimer = setTimeout(() => {
+                    this.checkpoints.tv = true;
+                  }, 5000);
+                } else {
+                  (this.state.items[i].ref.current as HTMLElement).setAttribute('class', 'tv');
+                }
+                this.setState({
+                  tvOn: this.state.tvOn,
+                });
+              }
+            }}
             style={{
               position: 'absolute',
               left: this.state.items[i].x,
@@ -132,6 +169,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
               top: this.state.items[i].y,
             }}
             onMouseDown={(e) => this.itemOnMouseDown(e, i)}
+            onTouchStart={(e) => this.itemOnMouseDown(e, i)}
           />)
         }
       </div>;
