@@ -33,6 +33,22 @@
     height: 100px;
     background: blue;
   }
+  .tv.on {
+    background: purple;
+  }
+  .progress-vertical {
+    height: 300px;
+    width: 40px;
+    background: #fff;
+    position: relative;
+    .progress-vertical-bar {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      bottom: 0;
+      background: #aaa;
+    }
+  }
   .progress {
     height: 30px;
     width: 80%;

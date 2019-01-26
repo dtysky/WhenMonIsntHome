@@ -19,6 +19,7 @@ interface IPropTypes extends RouteComponentProps<{sub: string}> {
 interface IStateTypes {
   gameState: GameState,
   progress: number,
+  verticalProgress: number,
   tvOn: boolean,
   items: {[name:string]: {
       static?: boolean,
@@ -34,6 +35,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   state = {
     gameState: GameState.confirm,
     progress: 0,
+    verticalProgress: 30,
     tvOn: false,
     items: {
       gameboy: {
@@ -140,6 +142,9 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
       >
         <div className="progress">
           <div className="progress-bar" style={{width: this.state.progress + '%'}}/>
+        </div>
+        <div className="progress-vertical">
+          <div className="progress-vertical-bar" style={{height: this.state.verticalProgress + '%'}}/>
         </div>
         {
           Object.keys(this.state.items).map(i => <div
