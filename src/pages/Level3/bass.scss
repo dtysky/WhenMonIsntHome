@@ -1,0 +1,57 @@
+/**
+ * @File   : bass.scss
+ * @Author : dtysky (dtysky@outlook.com)
+ * @Link   : dtysky.moe
+ * @Date   : 1/26/2019, 5:34:36 PM
+ */
+.level3 {
+  width: 100%;
+  height: 100%;
+
+  &-scene {
+    width: 100%;
+    height: 100%;
+    background: #0f0;
+  }
+
+  &-foots {
+    position: absolute;
+    width: 100%;
+    bottom: 20%;
+    height: 100%;
+  }
+
+  &-foot {
+    $width: 20px;
+    background: #f00;
+    width: $width;
+    position: absolute;
+    height: 100%;
+
+    &-left {
+      left: 10%;
+    }
+
+    &-right {
+      right: 10%;
+    }
+
+    &-bg {
+      background: #0f0;
+    }
+
+    &-button {
+      $size: 28px;
+      position: absolute;
+      width: $size;
+      height: $size;
+      left: -($size - $width) / 2;
+      // transform: translateY(-50%);
+    }
+  }
+
+  &-ui {
+    position: absolute;
+    top: 0;
+  }
+}
