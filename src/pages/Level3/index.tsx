@@ -13,6 +13,7 @@ import * as gsap from 'gsap';
 
 import assets from '../../assets';
 import config from './config';
+import timer from './timer';
 import './bass.scss';
 
 class EasePunishing extends gsap.Ease {
@@ -29,7 +30,8 @@ interface IPropTypes extends RouteComponentProps<{sub: string}> {
 interface IStateTypes {
   subLevel: number;
   distance: number;
-  state: 'idle' | 'raising' | 'releasing' | 'punishing' | 'fail' | 'success';
+  countDown: number;
+  state: 'preStart' | 'idle' | 'raising' | 'releasing' | 'punishing' | 'fail' | 'success';
   preFoot: 'left' | 'right';
   currentFoot: 'left' | 'right';
   currentTop: number;
@@ -53,7 +55,8 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   public state: IStateTypes = {
     subLevel: 0,
     distance: 0,
-    state: 'idle',
+    countDown: 0,
+    state: 'preStart',
     preFoot: 'right',
     currentFoot: 'left',
     currentTop: 0,
@@ -78,7 +81,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
 
     this.setState({
       subLevel: subLevel,
-      state: 'idle',
+      state: 'preStart',
       preFoot: 'right',
       currentFoot: 'left',
       currentTop: 0,
@@ -213,6 +216,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
 
     if (velocity > overVelocity) {
       vigilance = maxVigilance;
+      timer.stop();
       this.setState({state: 'fail'});
       return;
     }
@@ -221,6 +225,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     vigilance += overVigilance < 0 ? 0 : overVigilance;
 
     if (vigilance >= maxVigilance) {
+      timer.stop();
       this.setState({state: 'fail'});
       return;
     }
@@ -230,6 +235,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     console.log(velocity, distance)
 
     if (distance >= distDistance) {
+      timer.stop();
       this.setState({vigilance, distance, state: 'success'});
       return;
     }
@@ -262,12 +268,37 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   }
 
   public renderUI() {
-    const {distance, velocity} = this.state;
+    const {state, distance, velocity, subLevel, countDown} = this.state;
+
+    if (state === 'preStart') {
+      return (
+        <div className={cx('level3-ui')}>
+          <div
+            onClick={() => {
+              timer.start(
+                config.sub[subLevel].timeout,
+                (countDown: number) => this.setState({countDown}),
+                () => {
+                  if (this.state.state !== 'success' && this.state.state !== 'fail') {
+                    this.setState({state: 'fail'})
+                  }
+                }
+              );
+              this.setState({state: 'idle'});
+            }}
+          >
+            Start
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className={cx('level3-ui')}>
-        <p>velocity: {velocity}</p>
-        <p>distance: {distance}</p>
+        <p>state: {state}</p>
+        <p>countDown: {countDown.toFixed(1)}</p>
+        <p>velocity: {velocity.toFixed(2)}</p>
+        <p>distance: {distance.toFixed(2)}</p>
       </div>
     );
   }
