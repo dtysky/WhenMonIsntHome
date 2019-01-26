@@ -28,4 +28,17 @@
     height: 10px;
     background: green;
   }
+  .progress {
+    height: 30px;
+    width: 80%;
+    background: #fff;
+    position: relative;
+    .progress-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: #aaa;
+    }
+  }
 }

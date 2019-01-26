@@ -9,7 +9,8 @@ import Modal from '../../component/Modal';
 enum GameState {
   confirm = 1,
   gaming,
-  result,
+  timeout,
+  finished,
 }
 
 interface IPropTypes extends RouteComponentProps<{sub: string}> {
@@ -17,6 +18,7 @@ interface IPropTypes extends RouteComponentProps<{sub: string}> {
 
 interface IStateTypes {
   gameState: GameState,
+  progress: number,
   items: {[name:string]: {
       zIndex: number,
       ref: React.Ref<any>,
@@ -29,6 +31,7 @@ interface IStateTypes {
 class Level1 extends React.Component<IPropTypes, IStateTypes> {
   state = {
     gameState: GameState.confirm,
+    progress: 0,
     items: {
       gameboy: {
         zIndex: 100,
@@ -68,8 +71,27 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     items[this.draggingItem].zIndex = 100 + Object.keys(items).length - 1;
     this.forceUpdate();
   }
-  onMouseUp= (e) => {
+  onMouseUp = (e) => {
     this.isDragging = false;
+  }
+  interval;
+  start = () => {
+    const timeout = 20;
+    let t = Date.now();
+    this.interval = setInterval(() => {
+      const progress = (Date.now() - t) / (timeout * 1000) * 100;
+      this.setState({ progress });
+      if (progress >= 100) {
+        clearInterval(this.interval);
+        this.setState({
+          gameState: GameState.timeout,
+        });
+      }
+    }, 100);
+    this.setState({
+      gameState: GameState.gaming,
+      progress: 0,
+    });
   }
   itemOnMouseDown = (e, itemName) => {
     this.isDragging = true;
@@ -87,7 +109,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         <div>1.把游戏机放回原位</div>
         <div>2.观看电视不少于5s</div>
         <div>3.满足关卡快乐值</div>
-        <button onClick={() => this.setState({gameState: GameState.gaming})}>start</button>
+        <button onClick={this.start}>start</button>
       </Modal>;
     }
     if (this.state.gameState === GameState.gaming) {
@@ -96,6 +118,9 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         onMouseMove={this.onMouseMove}
         onMouseUp={this.onMouseUp}
       >
+        <div className="progress">
+          <div className="progress-bar" style={{width: this.state.progress + '%'}}/>
+        </div>
         {
           Object.keys(this.state.items).map(i => <div
             className={i}
