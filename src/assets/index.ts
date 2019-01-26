@@ -9,8 +9,8 @@ import ResourceManager, {IResourceEntry} from 'res-manager';
 const assets: IResourceEntry[] = [
   {
     preload: true,
-    name: 'test',
-    src: require('./level1_desk.png'),
+    name: 'ui-select',
+    src: require('./ui-select.jpg'),
     type: 'image',
     weight: 26
   },
