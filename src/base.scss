@@ -13,3 +13,19 @@
   background-color: #f4f7f6;
   position: relative;
 }
+
+.bg {
+  height: 100%;
+  width: 100%;
+  background: red;
+  .gameboy {
+    width: 10px;
+    height: 10px;
+    background: yellow;
+  }
+  .book {
+    width: 10px;
+    height: 10px;
+    background: green;
+  }
+}
