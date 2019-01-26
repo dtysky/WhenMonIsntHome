@@ -23,9 +23,10 @@
 }
 .book {
   position: absolute;
-  width: 50px;
-  height: 50px;
-  background: green;
+  width: 150px;
+  height: 240px;
+  background: url(./assets/level1_book.png);
+  background-size: 100% 100%;
 }
 .bg {
   height: 100%;
@@ -94,9 +95,8 @@
 }
 .progress {
   height: 30px;
-  left: 80px;
+  left: 30px;
   top: 50px;
-  width: 80%;
   background: #fff;
   position: fixed;
   .progress-bar {
