@@ -10,6 +10,7 @@ enum GameState {
   confirm = 1,
   main,
 
+  shelf,
   gameboy,
   desk,
 
@@ -23,6 +24,7 @@ interface IStateTypes {
   gameState: GameState,
   progress: number,
   stars: number,
+  subLevel: string,
   items: {[name:string]: {
       static?: boolean,
       zIndex: number,
@@ -38,6 +40,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     gameState: GameState.confirm,
     progress: 0,
     stars: 0,
+    subLevel: this.props.match.params.sub,
     items: {
       gameboy: {
         zIndex: 101,
@@ -51,8 +54,8 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         y: 200,
         ref: React.createRef(),
       },
-    }
-  }
+    },
+  };
   public async componentDidMount() {
     const subLevel = this.props.match.params.sub;
   }
@@ -82,6 +85,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     this.isDragging = false;
   }
   interval;
+  gameboyStarAdded = false;
   start = () => {
     const timeout = 20;
     let t = Date.now();
@@ -93,10 +97,14 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         const distance = (a, b) => Math.pow((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) , 0.5);
         this.setState({
           stars: this.state.stars + (
-            this.state.items.book.zIndex > this.state.items.gameboy.zIndex &&
-            distance(this.state.items.gameboy, {x: 60, y: 100}) < 100 &&
-            distance(this.state.items.gameboy, {x: 60, y: 100}) < 100 ? 1 : 0
-        ),
+            this.state.subLevel === '1' ? (
+              this.state.items.book.zIndex > this.state.items.gameboy.zIndex &&
+                distance(this.state.items.gameboy, { x: 60, y: 100 }) < 100 &&
+                distance(this.state.items.gameboy, { x: 60, y: 100 }) < 100 ? 1 : 0
+            ) : (
+                distance(this.state.items.gameboy, { x: 60, y: 100 }) < 100 ? 1 : 0
+              )
+          ),
           gameState: GameState.result,
         });
       }
@@ -144,15 +152,19 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         <div className="gameboy" style={{
           display: 'inline-block',
           width: '300px',
+          position: 'relative',
           height: '436px',
-        }}/>
+        }}>
+          <div className="cup"/>
+        </div>
+
         <button className="back" onClick={() => {
           clearTimeout(this.gameTimer);
-          this.setState({gameState: GameState.desk});
+          this.setState({gameState: this.state.subLevel === '2' ? GameState.shelf : GameState.desk});
         }}>back</button>
       </div>;
     }
-    if (this.state.gameState === GameState.desk) {
+    if (this.state.gameState === GameState.shelf) {
       return <Modal show={true} closeOnClick={() => {console.log('x')}}>
         <div
           onTouchMove={this.onMouseMove}
@@ -166,10 +178,49 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
             key={i}
             ref={this.state.items[i].ref}
             onClick={(e) => {
-              if (i === 'gameboy') {
+              if (i === 'gameboy' && !this.gameboyStarAdded) {
                 clearTimeout(this.gameTimer);
-                (this.state.items[i].ref.current as HTMLElement).setAttribute('class', 'tv on');
                 this.gameTimer = setTimeout(() => {
+                  this.gameboyStarAdded = true;
+                  this.setState({
+                    stars: this.state.stars + 1,
+                  });
+                }, 5000);
+                this.setState({gameState: GameState.gameboy});
+              }
+            }}
+            style={{
+              position: 'absolute',
+              left: this.state.items[i].x,
+              zIndex: this.state.items[i].zIndex,
+              top: this.state.items[i].y,
+            }}
+            onMouseDown={(e) => this.itemOnMouseDown(e, i)}
+            onTouchStart={(e) => this.itemOnMouseDown(e, i)}
+          />)
+        }
+        <button className="back" onClick={() => this.setState({gameState: GameState.main})}>back</button>
+        </div>
+      </Modal>;
+    }
+    if (this.state.gameState === GameState.desk) {
+      return <Modal show={true} closeOnClick={() => {console.log('x')}}>
+        <div
+          onTouchMove={this.onMouseMove}
+          onMouseMove={this.onMouseMove}
+          onMouseUp={this.onMouseUp}
+          onTouchEnd={this.onMouseUp}
+          style={{width: window.innerWidth, height: window.innerHeight, background: '#fff'}}>
+          {common}
+          {Object.keys(this.state.items).filter(i => i === 'gameboy').map(i => <div
+            className={i}
+            key={i}
+            ref={this.state.items[i].ref}
+            onClick={(e) => {
+              if (i === 'gameboy' && !this.gameboyStarAdded) {
+                clearTimeout(this.gameTimer);
+                this.gameTimer = setTimeout(() => {
+                  this.gameboyStarAdded = true;
                   this.setState({
                     stars: this.state.stars + 1,
                   });
@@ -204,8 +255,8 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         }}
       >
         <img className="bg-img" src={require('../../assets/level1_background.png')}/>
-        <div className="desk" onClick={() => this.setState({gameState: GameState.desk})}/>
-        <div className="shelf"/>
+        <div className="desk" onClick={() => this.state.subLevel === '1' && this.setState({gameState: GameState.desk})}/>
+        <div className="shelf" onClick={() => this.state.subLevel === '2' && this.setState({gameState: GameState.shelf})}/>
         <div className="sofa"/>
         {common}
       </div>;
