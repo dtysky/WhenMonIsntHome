@@ -15,5 +15,5 @@ for entity in IMAGES:
   path = entity[0]
   image = entity[1]
   (w, h) = image.size
-  image = image.resize((int(w / 5), int(h / 5)))
+  image = image.resize((414, int(414 / w * h)))
   image.save(path)
