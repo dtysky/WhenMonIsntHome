@@ -82,6 +82,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     this.isDragging = false;
   }
   interval;
+  gameboyStarAdded = false;
   start = () => {
     const timeout = 20;
     let t = Date.now();
@@ -166,10 +167,11 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
             key={i}
             ref={this.state.items[i].ref}
             onClick={(e) => {
-              if (i === 'gameboy') {
+              if (i === 'gameboy' && !this.gameboyStarAdded) {
                 clearTimeout(this.gameTimer);
                 (this.state.items[i].ref.current as HTMLElement).setAttribute('class', 'tv on');
                 this.gameTimer = setTimeout(() => {
+                  this.gameboyStarAdded = true;
                   this.setState({
                     stars: this.state.stars + 1,
                   });
