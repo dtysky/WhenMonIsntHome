@@ -10,7 +10,7 @@ const assets: IResourceEntry[] = [
   {
     preload: true,
     name: 'test',
-    src: require('./test.jpg'),
+    src: require('./level1_desk.png'),
     type: 'image',
     weight: 26
   },
