@@ -75,22 +75,26 @@
     width: 30px;
     height: 30px;
     margin-top: 10px;
-    background: #aaa;
+    background: url(./assets/star.png);
+    background-size: 100% 100%;
   }
 }
 .stars.star-1 {
   .star:nth-last-child(1) {
-    background: red;
+    background: url(./assets/star-yellow.png);
+    background-size: 100% 100%;
   }
 }
 .stars.star-2 {
   .star:nth-last-child(2) {
-    background: red;
+    background: url(./assets/star-yellow.png);
+    background-size: 100% 100%;
   }
 }
 .stars.star-3 {
   .star:nth-last-child(3) {
-    background: red;
+    background: url(./assets/star-yellow.png);
+    background-size: 100% 100%;
   }
 }
 .progress {

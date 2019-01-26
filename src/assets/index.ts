@@ -18,7 +18,7 @@ const assets: IResourceEntry[] = [];
   assets.push({
     preload: true,
     name,
-    src: `require('./${name}')`,
+    src: require(`./${name}.png`),
     type: 'image',
     weight: 1
   })
