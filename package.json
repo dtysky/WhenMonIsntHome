@@ -1,0 +1,81 @@
+{
+  "name": "WhenMonIsntHome",
+  "version": "0.1.0",
+  "description": "When mom isn't home.",
+  "main": "src/index.tsx",
+  "scripts": {
+    "dev": "node server.dev.js",
+    "build": "webpack -p --config webpack.prod.config.js",
+    "create": "node ./createNewEffect/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dtysky/WhenMonIsntHome.git"
+  },
+  "keywords": [
+    "effects",
+    "amazing",
+    "paradise"
+  ],
+  "authors": [
+    {
+      "name": "Tianyu Dai (dtysky)",
+      "email": "dtysky@outlook.com"
+    }
+  ],
+  "license": "MIT",
+  "files": [
+    "lib",
+    "README.md"
+  ],
+  "bugs": {
+    "url": "https://github.com/dtysky/WhenMonIsntHome/issues"
+  },
+  "homepage": "https://github.com/dtysky/WhenMonIsntHome#readme",
+  "devDependencies": {
+    "@types/node": "^6.0.52",
+    "autoprefixer": "^7.2.4",
+    "awesome-typescript-loader": "^3.0.0-beta.17",
+    "clean-webpack-plugin": "^0.1.19",
+    "compression-webpack-plugin": "^1.1.3",
+    "css-loader": "^0.28.8",
+    "express": "^4.16.2",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^2.30.1",
+    "json-loader": "^0.5.7",
+    "node-sass": "^4.7.2",
+    "postcss-loader": "^2.0.10",
+    "postcss-smart-import": "^0.7.6",
+    "precss": "^2.0.0",
+    "raw-loader": "^0.5.1",
+    "react-hot-loader": "^3.1.3",
+    "sass-loader": "^6.0.6",
+    "source-map-loader": "^0.1.5",
+    "style-loader": "^0.19.1",
+    "through2": "^2.0.3",
+    "tslint": "^4.1.1",
+    "tslint-loader": "^3.5.3",
+    "typescript": "^2.6.2",
+    "url-loader": "^1.0.1",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.10.1",
+    "tslint-microsoft-contrib": "^5.0.0"
+  },
+  "dependencies": {
+    "@types/classnames": "^2.2.4",
+    "@types/gsap": "^1.19.2",
+    "@types/react": "^16.0.31",
+    "@types/react-dom": "^16.0.3",
+    "@types/react-router": "^4.0.20",
+    "@types/react-router-dom": "^4.2.3",
+    "classnames": "^2.2.6",
+    "es6-object-assign": "^1.1.0",
+    "gsap": "1.20.4",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "res-manager": "^0.9.0"
+  }
+}
