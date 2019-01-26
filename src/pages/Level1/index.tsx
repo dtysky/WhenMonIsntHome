@@ -8,7 +8,11 @@ import Modal from '../../component/Modal';
 
 enum GameState {
   confirm = 1,
-  gaming,
+  main,
+
+  gameboy,
+  desk,
+
   timeout,
   finished,
 }
@@ -19,8 +23,7 @@ interface IPropTypes extends RouteComponentProps<{sub: string}> {
 interface IStateTypes {
   gameState: GameState,
   progress: number,
-  verticalProgress: number,
-  tvOn: boolean,
+  stars: number,
   items: {[name:string]: {
       static?: boolean,
       zIndex: number,
@@ -35,8 +38,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   state = {
     gameState: GameState.confirm,
     progress: 0,
-    verticalProgress: 30,
-    tvOn: false,
+    stars: 1,
     items: {
       gameboy: {
         zIndex: 100,
@@ -95,15 +97,15 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     this.interval = setInterval(() => {
       const progress = (Date.now() - t) / (timeout * 1000) * 100;
       this.setState({ progress });
-      if (progress >= 100) {
-        clearInterval(this.interval);
-        this.setState({
-          gameState: GameState.timeout,
-        });
-      }
+      // if (progress >= 100) {
+      //   clearInterval(this.interval);
+      //   this.setState({
+      //     gameState: GameState.timeout,
+      //   });
+      // }
     }, 16);
     this.setState({
-      gameState: GameState.gaming,
+      gameState: GameState.main,
       progress: 0,
     });
   }
@@ -132,19 +134,36 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         <button onClick={this.start}>start</button>
       </Modal>;
     }
-    if (this.state.gameState === GameState.gaming) {
+    if (this.state.gameState === GameState.desk) {
+      return <Modal show={true} closeOnClick={() => {console.log('x')}}>
+        <div style={{width: '100%', height: '100%'}}>
+        </div>
+      </Modal>;
+    }
+    if (this.state.gameState === GameState.main) {
       return <div
         className="bg"
+        ref={(ref) => {
+          if (ref) {
+            ref.style.width = (4000 / 2484 * window.innerHeight) + 'px';
+          }
+        }}
         onTouchMove={this.onMouseMove}
         onMouseMove={this.onMouseMove}
         onMouseUp={this.onMouseUp}
         onTouchEnd={this.onMouseUp}
       >
+        <img className="bg-img" src={require('../../assets/level1_background.png')}/>
+        <div className="desk" onClick={() => this.setState({gameState: GameState.desk})}/>
+        <div className="shelf"/>
+        <div className="sofa"/>
         <div className="progress">
           <div className="progress-bar" style={{width: this.state.progress + '%'}}/>
         </div>
-        <div className="progress-vertical">
-          <div className="progress-vertical-bar" style={{height: this.state.verticalProgress + '%'}}/>
+        <div className={'stars star-' + this.state.stars}>
+          <div className="star"/>
+          <div className="star"/>
+          <div className="star"/>
         </div>
         {
           Object.keys(this.state.items).map(i => <div
@@ -154,17 +173,10 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
             onClick={(e) => {
               if (i === 'tv') {
                 clearTimeout(this.tvTimer);
-                if (!this.state.tvOn) {
-                  (this.state.items[i].ref.current as HTMLElement).setAttribute('class', 'tv on');
-                  this.tvTimer = setTimeout(() => {
-                    this.checkpoints.tv = true;
-                  }, 5000);
-                } else {
-                  (this.state.items[i].ref.current as HTMLElement).setAttribute('class', 'tv');
-                }
-                this.setState({
-                  tvOn: this.state.tvOn,
-                });
+                (this.state.items[i].ref.current as HTMLElement).setAttribute('class', 'tv on');
+                this.tvTimer = setTimeout(() => {
+                  this.checkpoints.tv = true;
+                }, 5000);
               }
             }}
             style={{
