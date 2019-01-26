@@ -23,10 +23,4 @@ const render = () => {
   );
 };
 
-declare const module: any;
-if (module.hot) {
-  module.hot.accept();
-  render();
-} else {
-  render();
-}
+render();

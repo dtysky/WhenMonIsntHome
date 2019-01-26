@@ -17,6 +17,13 @@ interface IStateTypes {
 
 export default class Loading extends React.PureComponent<IPropTypes, IStateTypes> {
   public render() {
-    return null;
+    const {progress, name} = this.props;
+
+    return (
+      <div>
+        <p>{name}</p>
+        <p>{progress}</p>
+      </div>
+    );
   }
 }

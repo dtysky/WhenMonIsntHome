@@ -9,6 +9,8 @@ import {
   Route, Switch, withRouter, RouteComponentProps, Redirect
 } from 'react-router-dom';
 
+import assets from '../../assets';
+
 interface IPropTypes extends RouteComponentProps<{sub: string}> {
 
 }

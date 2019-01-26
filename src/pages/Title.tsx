@@ -6,6 +6,8 @@
  */
 import * as React from 'react';
 
+import assets from '../assets';
+
 interface IPropTypes {
 
 }
@@ -16,6 +18,6 @@ interface IStateTypes {
 
 export default class Title extends React.PureComponent<IPropTypes, IStateTypes> {
   public render() {
-    return null;
+    return <img src={assets.getSrc('test')} />;
   }
 }

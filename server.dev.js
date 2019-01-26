@@ -24,7 +24,7 @@ const port = 8888;
 const proxyPort = port + 1;
 
 app.use('/assets',
-  express.static(path.resolve(__dirname, './assets'))
+  express.static(path.resolve(__dirname, './src/assets'))
 );
 
 const devServer = () => {

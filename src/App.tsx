@@ -9,6 +9,7 @@ import {
   Route, Switch, withRouter, RouteComponentProps, Redirect
 } from 'react-router-dom';
 
+import assets from './assets';
 import Title from './pages/Title';
 import Loading from './pages/Loading';
 import Level1 from './pages/Level1';
@@ -21,12 +22,30 @@ interface IPropTypes extends RouteComponentProps<{}> {
 
 interface IStateTypes {
   gameState: 'pre' | 'loading' | 'gaming';
+  loadState: {progress: number, name: string};
 }
 
 class App extends React.Component<IPropTypes, IStateTypes> {
   public state: IStateTypes = {
-    gameState: 'pre'
+    gameState: 'pre',
+    loadState: {progress: 0, name: ''}
   };
+
+  public componentDidMount() {
+    assets.registerOnProgress(this.handleProgress);
+    assets.registerOnComplete(this.handleLoadDone);
+    assets.load();
+    
+    this.setState({gameState: 'loading'});
+  }
+
+  private handleProgress = (progress: number, name: string) => {
+    this.setState({loadState: {progress, name}});
+  }
+
+  private handleLoadDone = () => {
+    this.setState({gameState: 'gaming'});
+  }
 
   public render() {
     const {gameState} = this.state;
@@ -47,7 +66,11 @@ class App extends React.Component<IPropTypes, IStateTypes> {
   }
 
   public renderLoading() {
-    return null;
+    const {progress, name} = this.state.loadState;
+
+    return (
+      <Loading progress={progress} name={name} />
+    );
   }
 
   public renderMain() {

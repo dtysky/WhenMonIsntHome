@@ -4,6 +4,3 @@
  * @Link   : dtysky.moe
  * @Date   : 1/26/2019, 11:41:16 AM
  */
-export const assets = [
-  
-];

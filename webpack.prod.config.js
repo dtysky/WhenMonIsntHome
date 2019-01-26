@@ -12,6 +12,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 
+const outPath = path.resolve(__dirname, './dist');
+
 module.exports = {
   entry: {
     main: path.resolve(__dirname, './src/index.tsx'),
@@ -20,8 +22,7 @@ module.exports = {
 
   output: {
     path: outPath,
-    filename: 'assets/[name].[hash].js',
-    chunkFilename: 'assets/[name].chunk.[hash].js',
+    filename: '[name].[hash].js',
     publicPath: '/'
   },
 
@@ -72,14 +73,12 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|jpg|gif|svg|mp4)$/,
-        exclude: /gltf/,
+        test: /\.(png|jpg|gif|svg|mp4|mp3)$/,
         use: {
           loader: 'url-loader',
           query: {
             limit: 1000,
-            context: path.resolve(__dirname, 'src/collection'),
-            name: 'assets/[path][name].[ext]'
+            name: 'assets/[name].[hash].[ext]'
           }
         }
       },
@@ -88,28 +87,14 @@ module.exports = {
         use: {
           loader: 'json-loader'
         }
-      },
-      {
-        // here I match only IMAGE and BIN files under the gltf folder
-        test: /\.(bin|png|jpe?g|gif)$/,
-        // or use url-loader if you would like to embed images in the source gltf
-        use: {
-          loader: 'file-loader',
-          options: {
-            // output folder for bin and image files, configure as needed
-            name: 'assets/[name].[hash].[ext]'
-          }
-        }
       }
-      // end GLTF configuration
     ]
   },
 
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify('development'),
-        BROWSER: JSON.stringify(true)
+        NODE_ENV: JSON.stringify('production')
       }
     }),
     new CleanWebpackPlugin(
@@ -117,13 +102,8 @@ module.exports = {
       {root: outPath}
     ),
     new ExtractTextPlugin({
-      filename: 'assets/main.[hash].css',
+      filename: 'main.[hash].css',
       allChunks: true
-    }),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: ['react-packet'],

@@ -3,7 +3,7 @@
     "allowJs": true,
     "sourceMap": true,
     "module": "commonjs",
-    "moduleResolution": "node",
+    // "moduleResolution": "node",
     "removeComments": false,
     "target": "es5",
     "jsx": "react",
