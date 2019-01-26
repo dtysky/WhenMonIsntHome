@@ -123,6 +123,23 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         <button onClick={this.start}>start</button>
       </Modal>;
     }
+    const common = <div>
+        <div className="progress">
+          <div className="progress-bar" style={{width: this.state.progress + '%'}}/>
+        </div>
+        <div className={'stars star-' + this.state.stars}>
+          <div className="star"/>
+          <div className="star"/>
+          <div className="star"/>
+        </div>
+    </div>;
+    if (this.state.gameState === GameState.gameboy) {
+      return <div style={{height: '100%', width: '100%', position: 'absolute', display: 'flex', justifyContent: 'center', alignItems: 'center', transform: 'scale(2)'}}>
+        {common}
+        <div className="gameboy" style={{ display: 'inline-block' }}/>
+        <button className="back" onClick={() => this.setState({gameState: GameState.desk})}>back</button>
+      </div>;
+    }
     if (this.state.gameState === GameState.desk) {
       return <Modal show={true} closeOnClick={() => {console.log('x')}}>
         <div
@@ -130,17 +147,19 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
           onMouseMove={this.onMouseMove}
           onMouseUp={this.onMouseUp}
           onTouchEnd={this.onMouseUp}
-          style={{width: window.innerWidth, height: window.innerHeight}}>
+          style={{width: window.innerWidth, height: window.innerHeight, background: '#fff'}}>
+          {common}
           {Object.keys(this.state.items).map(i => <div
             className={i}
             key={i}
             ref={this.state.items[i].ref}
             onClick={(e) => {
-              if (i === 'game') {
+              if (i === 'gameboy') {
                 clearTimeout(this.gameTimer);
                 (this.state.items[i].ref.current as HTMLElement).setAttribute('class', 'tv on');
                 this.gameTimer = setTimeout(() => {
                 }, 5000);
+                this.setState({gameState: GameState.gameboy});
               }
             }}
             style={{
@@ -153,6 +172,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
             onTouchStart={(e) => this.itemOnMouseDown(e, i)}
           />)
         }
+        <button className="back" onClick={() => this.setState({gameState: GameState.main})}>back</button>
         </div>
       </Modal>;
     }
@@ -169,14 +189,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         <div className="desk" onClick={() => this.setState({gameState: GameState.desk})}/>
         <div className="shelf"/>
         <div className="sofa"/>
-        <div className="progress">
-          <div className="progress-bar" style={{width: this.state.progress + '%'}}/>
-        </div>
-        <div className={'stars star-' + this.state.stars}>
-          <div className="star"/>
-          <div className="star"/>
-          <div className="star"/>
-        </div>
+        {common}
       </div>;
     }
   }

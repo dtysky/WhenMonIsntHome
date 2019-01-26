@@ -20,7 +20,6 @@ interface IStateTypes {
 export default class Title extends React.PureComponent<IPropTypes, IStateTypes> {
   public render() {
     return <Link to="/level/1/1">
-      <img src={assets.getSrc('test')} />
     </Link>;
   }
 }

@@ -14,18 +14,19 @@
   position: relative;
 }
 
-  .gameboy {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background: yellow;
-  }
-  .book {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background: green;
-  }
+.gameboy {
+  position: absolute;
+  width: 150px;
+  height: 218px;
+  background: url(./assets/level1_concle.png);
+  background-size: 100% 100%;
+}
+.book {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: green;
+}
 .bg {
   height: 100%;
   width: 0;
@@ -64,45 +65,50 @@
     left: 39%;
     top: 40%;
   }
-  .stars {
-    height: 300px;
-    position: fixed;
-    top: 30%;
-    .star {
-      width: 30px;
-      height: 30px;
-      margin-top: 10px;
-      background: #aaa;
-    }
-  }
-  .stars.star-1 {
-    .star:nth-last-child(1) {
-      background: red;
-    }
-  }
-  .stars.star-2 {
-    .star:nth-last-child(2) {
-      background: red;
-    }
-  }
-  .stars.star-3 {
-    .star:nth-last-child(3) {
-      background: red;
-    }
-  }
-  .progress {
+}
+.stars {
+  height: 300px;
+  position: fixed;
+  top: 30%;
+  .star {
+    width: 30px;
     height: 30px;
-    left: 80px;
-    top: 50px;
-    width: 80%;
-    background: #fff;
-    position: fixed;
-    .progress-bar {
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      background: #aaa;
-    }
+    margin-top: 10px;
+    background: #aaa;
   }
+}
+.stars.star-1 {
+  .star:nth-last-child(1) {
+    background: red;
+  }
+}
+.stars.star-2 {
+  .star:nth-last-child(2) {
+    background: red;
+  }
+}
+.stars.star-3 {
+  .star:nth-last-child(3) {
+    background: red;
+  }
+}
+.progress {
+  height: 30px;
+  left: 80px;
+  top: 50px;
+  width: 80%;
+  background: #fff;
+  position: fixed;
+  .progress-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: #aaa;
+  }
+}
+.back {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 }
