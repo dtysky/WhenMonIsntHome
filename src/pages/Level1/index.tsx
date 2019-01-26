@@ -152,8 +152,12 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         <div className="gameboy" style={{
           display: 'inline-block',
           width: '300px',
+          position: 'relative',
           height: '436px',
-        }}/>
+        }}>
+          <div className="cup"/>
+        </div>
+
         <button className="back" onClick={() => {
           clearTimeout(this.gameTimer);
           this.setState({gameState: this.state.subLevel === '2' ? GameState.shelf : GameState.desk});
