@@ -12,6 +12,7 @@ import cx from 'classnames';
 import * as gsap from 'gsap';
 
 import assets from '../../assets';
+import UI from '../../component/UI'
 import config from './config';
 import timer from './timer';
 import './bass.scss';
@@ -252,9 +253,8 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     return (
       <div className={cx('level3')}>
         {this.renderScene()}
-        {this.renderUI()}
         {this.renderFoots()}
-        {this.renderResult()}
+        {this.renderUI()}
       </div>
     );
   }
@@ -270,37 +270,47 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   public renderUI() {
     const {state, distance, velocity, subLevel, countDown} = this.state;
 
+    let uiState = 'normal';
+
+    if (state === 'fail' || state === 'success') {
+      uiState = 'result';
+    }
+
     if (state === 'preStart') {
-      return (
-        <div className={cx('level3-ui')}>
-          <div
-            onClick={() => {
-              timer.start(
-                config.sub[subLevel].timeout,
-                (countDown: number) => this.setState({countDown}),
-                () => {
-                  if (this.state.state !== 'success' && this.state.state !== 'fail') {
-                    this.setState({state: 'fail'})
-                  }
-                }
-              );
-              this.setState({state: 'idle'});
-            }}
-          >
-            Start
-          </div>
-        </div>
-      );
+      uiState = 'desc';
     }
 
     return (
-      <div className={cx('level3-ui')}>
-        <p>state: {state}</p>
-        <p>countDown: {countDown.toFixed(1)}</p>
-        <p>velocity: {velocity.toFixed(2)}</p>
-        <p>distance: {distance.toFixed(2)}</p>
-      </div>
+      <UI
+        state={uiState as any}
+        level={3}
+        subLevel={subLevel + 1}
+        countDown={countDown}
+        starCount={1}
+        onStart={() => {
+          timer.start(
+            config.sub[subLevel].timeout,
+            (countDown: number) => this.setState({countDown}),
+            () => {
+              if (this.state.state !== 'success' && this.state.state !== 'fail') {
+                this.setState({state: 'fail'})
+              }
+            }
+          );
+          this.setState({state: 'idle'});
+        }}
+        onBack={() => this.props.history.push('/title')}
+      />
     );
+
+    // return (
+    //   <div className={cx('level3-ui')}>
+    //     <p>state: {state}</p>
+    //     <p>countDown: {countDown.toFixed(1)}</p>
+    //     <p>velocity: {velocity.toFixed(2)}</p>
+    //     <p>distance: {distance.toFixed(2)}</p>
+    //   </div>
+    // );
   }
 
   public renderFoots() {
@@ -334,20 +344,6 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
             </div>
           ))
         }
-      </div>
-    );
-  }
-
-  public renderResult() {
-    const {state} = this.state;
-
-    if (state !== 'fail' && state !== 'success') {
-      return null;
-    }
-
-    return (
-      <div className={'level3-result'}>
-
       </div>
     );
   }
