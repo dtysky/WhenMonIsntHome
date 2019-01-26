@@ -6,15 +6,7 @@
  */
 import ResourceManager, {IResourceEntry} from 'res-manager';
 
-const assets: IResourceEntry[] = [
-  {
-    preload: true,
-    name: 'sofa',
-    src: require('./sofa.png'),
-    type: 'image',
-    weight: 26
-  },
-];
+const assets: IResourceEntry[] = [];
 
 [
   'button-back', 'confirm-ui', 'door', 'level-selcet', 'level1_background',

@@ -13,8 +13,7 @@ enum GameState {
   gameboy,
   desk,
 
-  timeout,
-  finished,
+  result,
 }
 
 interface IPropTypes extends RouteComponentProps<{sub: string}> {
@@ -38,17 +37,17 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   state = {
     gameState: GameState.confirm,
     progress: 0,
-    stars: 1,
+    stars: 0,
     items: {
       gameboy: {
         zIndex: 101,
-        x: 30,
+        x: 60,
         y: 100,
         ref: React.createRef(),
       },
       book: {
         zIndex: 102,
-        x: 60,
+        x: 80,
         y: 200,
         ref: React.createRef(),
       },
@@ -76,7 +75,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     items[this.draggingItem].x = this.cachedX + diffX + 'px';
     items[this.draggingItem].y = this.cachedY + diffY + 'px';
     Object.keys(items).forEach(i => items[i].zIndex = this.zIndexMap[i] - 1);
-    items[this.draggingItem].zIndex = 100 + Object.keys(items).length - 1;
+    items[this.draggingItem].zIndex = 100 + Object.keys(items).length;
     this.forceUpdate();
   }
   onMouseUp = (e) => {
@@ -89,12 +88,18 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     this.interval = setInterval(() => {
       const progress = (Date.now() - t) / (timeout * 1000) * 100;
       this.setState({ progress });
-      // if (progress >= 100) {
-      //   clearInterval(this.interval);
-      //   this.setState({
-      //     gameState: GameState.timeout,
-      //   });
-      // }
+      if (progress >= 100) {
+        clearInterval(this.interval);
+        const distance = (a, b) => Math.pow((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) , 0.5);
+        this.setState({
+          stars: this.state.stars + (
+            this.state.items.book.zIndex > this.state.items.gameboy.zIndex &&
+            distance(this.state.items.gameboy, {x: 60, y: 100}) < 100 &&
+            distance(this.state.items.gameboy, {x: 60, y: 100}) < 100 ? 1 : 0
+        ),
+          gameState: GameState.result,
+        });
+      }
     }, 16);
     this.setState({
       gameState: GameState.main,
@@ -123,6 +128,30 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         <button onClick={this.start}>start</button>
       </Modal>;
     }
+    const common = <div>
+        <div className="progress" style={{width: window.innerWidth * 0.7}}>
+          <div className="progress-bar" style={{width: this.state.progress + '%'}}/>
+        </div>
+        <div className={'stars star-' + this.state.stars}>
+          <div className="star"/>
+          <div className="star"/>
+          <div className="star"/>
+        </div>
+    </div>;
+    if (this.state.gameState === GameState.gameboy) {
+      return <div style={{height: '100%', width: '100%', position: 'fixed', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        {common}
+        <div className="gameboy" style={{
+          display: 'inline-block',
+          width: '300px',
+          height: '436px',
+        }}/>
+        <button className="back" onClick={() => {
+          clearTimeout(this.gameTimer);
+          this.setState({gameState: GameState.desk});
+        }}>back</button>
+      </div>;
+    }
     if (this.state.gameState === GameState.desk) {
       return <Modal show={true} closeOnClick={() => {console.log('x')}}>
         <div
@@ -130,17 +159,22 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
           onMouseMove={this.onMouseMove}
           onMouseUp={this.onMouseUp}
           onTouchEnd={this.onMouseUp}
-          style={{width: window.innerWidth, height: window.innerHeight}}>
+          style={{width: window.innerWidth, height: window.innerHeight, background: '#fff'}}>
+          {common}
           {Object.keys(this.state.items).map(i => <div
             className={i}
             key={i}
             ref={this.state.items[i].ref}
             onClick={(e) => {
-              if (i === 'game') {
+              if (i === 'gameboy') {
                 clearTimeout(this.gameTimer);
                 (this.state.items[i].ref.current as HTMLElement).setAttribute('class', 'tv on');
                 this.gameTimer = setTimeout(() => {
+                  this.setState({
+                    stars: this.state.stars + 1,
+                  });
                 }, 5000);
+                this.setState({gameState: GameState.gameboy});
               }
             }}
             style={{
@@ -153,8 +187,12 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
             onTouchStart={(e) => this.itemOnMouseDown(e, i)}
           />)
         }
+        <button className="back" onClick={() => this.setState({gameState: GameState.main})}>back</button>
         </div>
       </Modal>;
+    }
+    if (this.state.gameState === GameState.result) {
+      return null;
     }
     if (this.state.gameState === GameState.main) {
       return <div
@@ -169,14 +207,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         <div className="desk" onClick={() => this.setState({gameState: GameState.desk})}/>
         <div className="shelf"/>
         <div className="sofa"/>
-        <div className="progress">
-          <div className="progress-bar" style={{width: this.state.progress + '%'}}/>
-        </div>
-        <div className={'stars star-' + this.state.stars}>
-          <div className="star"/>
-          <div className="star"/>
-          <div className="star"/>
-        </div>
+        {common}
       </div>;
     }
   }

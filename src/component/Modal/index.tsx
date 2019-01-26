@@ -21,7 +21,7 @@ export default class Modal extends React.Component<IPropTypes, IStateTypes> {
            top: 0,
            width: '100%',
            height: '100%',
-           zIndex: 1000,
+           zIndex: 10,
        }}
     >
         <div
