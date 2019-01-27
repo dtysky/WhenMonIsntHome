@@ -61,6 +61,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
       },
     },
   };
+
   public async componentDidMount() {
     const subLevel = this.props.match.params.sub;
   }
@@ -271,8 +272,8 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
       >
         {common}
         <img className="bg-img" src={require('../../assets/level1_background.png')}/>
-        <div onTouchMove={() => document.querySelector('html').scrollLeft -= 10} className="left"/>
-        <div onTouchMove={() => document.querySelector('html').scrollLeft += 10} className="right"/>
+        <div onTouchMove={() => (document.querySelector('.bg') as any).style.marginLeft -= 10} className="left"/>
+        <div onTouchMove={() => (document.querySelector('.bg') as any).style.marginLeft += 10} className="right"/>
         <div className="desk" onClick={() => {
           if (this.state.subLevel === '1') {
             this.state.stars['gameboyFound'] = false;
