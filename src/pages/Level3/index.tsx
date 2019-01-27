@@ -14,7 +14,7 @@ import * as gsap from 'gsap';
 import assets from '../../assets';
 import UI from '../../component/UI'
 import config from './config';
-import timer from './timer';
+import timer from '../../component/timer';
 import './bass.scss';
 
 class EasePunishing extends gsap.Ease {
