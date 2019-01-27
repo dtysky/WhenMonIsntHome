@@ -167,7 +167,7 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
           clearTimeout(this.gameTimer);
           this.setState({gameState: GameState.main});
         } else if (this.state.gameState === GameState.main) {
-          history.back();
+          this.props.history.push('/title');
         } else {
           this.setState({gameState: GameState.main});
         }
@@ -251,6 +251,7 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
         {common}
       </div>;
     }
+    return common;
   }
 }
 
