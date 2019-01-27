@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom';
 
 import assets from '../../assets';
+import UI from '../../component/UI'
 import Modal from '../../component/Modal';
 
 enum GameState {
@@ -24,7 +25,8 @@ interface IPropTypes extends RouteComponentProps<{sub: string}> {
 
 interface IStateTypes {
   gameState: GameState,
-  progress: number,
+  totalTime: number,
+  countDown: number,
   stars: {[s:string]:any},
   channel: number,
   subLevel: string,
@@ -43,7 +45,8 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
   channels = 3;
   state = {
     gameState: GameState.confirm,
-    progress: 0,
+    totalTime: 0,
+    countDown: 0,
     stars: {},
     channel: 0,
     getController: false,
@@ -57,6 +60,10 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
       },
     },
   };
+  constructor(props) {
+    super(props);
+    console.log('#');
+  }
   public async componentDidMount() {
     const subLevel = this.props.match.params.sub;
   }
@@ -90,9 +97,9 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
     const timeout = 20000;
     let t = Date.now();
     this.interval = setInterval(() => {
-      const progress = (Date.now() - t) / (timeout * 1000) * 100;
-      this.setState({ progress });
-      if (progress >= 100) {
+      const countDown = (timeout - (Date.now() - t)) / 1000;
+      this.setState({ countDown, totalTime: timeout / 1000 });
+      if (countDown < 0) {
         clearInterval(this.interval);
         this.setState({
           gameState: GameState.result,
@@ -101,7 +108,8 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
     }, 16);
     this.setState({
       gameState: GameState.main,
-      progress: 0,
+      countDown: 0,
+      totalTime: 0,
     });
   }
   itemOnMouseDown = (e, itemName) => {
@@ -136,25 +144,35 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
     }, 5000);
   }
   public render() {
-    if (this.state.gameState === GameState.confirm) {
-      return <Modal show={true} closeOnClick={() => {console.log('x')}}>
-        <div>关卡挑战目标</div>
-        <div>1.把游戏机放回原位</div>
-        <div>2.观看电视不少于5s</div>
-        <div>3.满足关卡快乐值</div>
-        <button onClick={this.start}>start</button>
-      </Modal>;
+    const { gameState } = this.state;
+    let uiState = 'normal';
+
+    if (gameState === GameState.result) {
+      uiState = 'result';
     }
-    const common = <div>
-        <div className="progress" style={{width: window.innerWidth * 0.7}}>
-          <div className="progress-bar" style={{width: this.state.progress + '%'}}/>
-        </div>
-        <div className={'stars star-' + Object.keys(this.state.stars).length}>
-          <div className="star"/>
-          <div className="star"/>
-          <div className="star"/>
-        </div>
-    </div>;
+
+    if (gameState === GameState.confirm) {
+      uiState = 'desc';
+    }
+    const common = <UI
+      state={uiState as any}
+      level={2}
+      subLevel={parseInt(this.state.subLevel, 10)}
+      countDown={this.state.countDown}
+      starCount={Object.keys(this.state.stars).length}
+      totalTime={this.state.totalTime}
+      onStart={this.start}
+      onBack={() => {
+        if (this.state.gameState === GameState.tvSet) {
+          clearTimeout(this.gameTimer);
+          this.setState({gameState: GameState.main});
+        } else if (this.state.gameState === GameState.main) {
+          history.back();
+        } else {
+          this.setState({gameState: GameState.main});
+        }
+      }}>
+    </UI>;
     if (this.state.gameState === GameState.tvSet) {
       return <div className="tvSet">
         {common}
@@ -162,16 +180,11 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
         <div onClick={() => this.setState({channel: (this.state.channel - 1) < 0 ? this.channels - 1 : (this.state.channel - 1)}, this.channelOnChange)} className="btnPrev"/>
         <div onClick={() => this.setState({channel: (this.state.channel + 1) % this.channels}, this.channelOnChange)} className="btnNext"/>
         <div className="btnTv"/>
-        <button className="back" onClick={() => {
-          clearTimeout(this.gameTimer);
-          this.setState({gameState: GameState.main});
-        }}>back</button>
       </div>;
     }
     if (this.state.gameState === GameState.tvSetEmpty) {
       return <div className="tvSetEmpty">
         {common}
-        <button className="back" onClick={() => this.setState({gameState: GameState.main})}>back</button>
       </div>;
     }
     if (this.state.gameState === GameState.shelf) {
@@ -210,12 +223,8 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
             onTouchStart={(e) => this.itemOnMouseDown(e, i)}
           />)
         }
-        <button className="back" onClick={() => this.setState({gameState: GameState.main})}>back</button>
         </div>
       </Modal>;
-    }
-    if (this.state.gameState === GameState.result) {
-      return null;
     }
     if (this.state.gameState === GameState.main) {
       return <div
