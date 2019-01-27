@@ -60,12 +60,16 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
       },
     },
   };
+  private bgm: React.RefObject<HTMLAudioElement> = React.createRef();
   constructor(props) {
     super(props);
     console.log('#');
   }
   public async componentDidMount() {
     const subLevel = this.props.match.params.sub;
+  }
+  public componentWillUnmount() {
+    this.bgm.current.pause();
   }
   isDragging = false;
   mouseDownX;
@@ -172,6 +176,12 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
           this.setState({gameState: GameState.main});
         }
       }}>
+      <audio
+        src={require('../../assets/level3-bgm.mp3')}
+        ref={this.bgm}
+        loop
+        autoPlay
+      />
     </UI>;
     if (this.state.gameState === GameState.tvSet) {
       return <div className="tvSet">

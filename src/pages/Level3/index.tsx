@@ -237,7 +237,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
 
     const sound = this.foot.current;
     const volume = velocity / overVelocity;
-    sound.volume = volume > 1 ? 1 : volume;
+    sound.volume = (volume > 1 ? 1 : volume) / 2;
     sound.play();
 
     if (velocity > overVelocity) {
@@ -257,8 +257,6 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     }
 
     distance += heightToMeter(currentTop) * topToStepFactor;
-
-    console.log(velocity, distance)
 
     if (distance >= distDistance) {
       timer.stop();
@@ -372,7 +370,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
               }
             }
           );
-          // this.bgm.current.play();
+          this.bgm.current.play();
           this.setState({state: 'idle'});
         }}
         onBack={() => this.props.history.push('/title')}
@@ -381,7 +379,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
           className={cx('level3-vigilance')}
           style={{color}}
         >
-          警戒值： {this.state.vigilance.toFixed(2)}
+          警觉值： {this.state.vigilance.toFixed(2)}
         </p>
       </UI>
     );

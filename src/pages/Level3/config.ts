@@ -8,7 +8,7 @@ export default {
   height: 240,
   sub: [
     {
-      timeout: 10,
+      timeout: 15,
       goodTime: 6,
       distDistance: 10,
       topToStepFactor: 1,
@@ -20,7 +20,7 @@ export default {
       mass: 30
     },
     {
-      timeout: 10,
+      timeout: 12,
       goodTime: 6,
       distDistance: 10,
       topToStepFactor: 1,
@@ -32,14 +32,14 @@ export default {
       mass: 30
     },
     {
-      timeout: 6,
+      timeout: 9,
       goodTime: 6,
       distDistance: 10,
       topToStepFactor: 1,
       maxVigilance: 2,
       vigilanceTh: .5,
       goodVigilance: 1,
-      overVelocity: 1,
+      overVelocity: 1.2,
       autoReleaseTime: .3,
       mass: 30
     }
