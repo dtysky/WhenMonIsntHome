@@ -85,18 +85,14 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     this.forceUpdate();
   }
   onMouseUp = (e) => {
-    if (this.draggingItem === 'gameboy' && this.state.stars['gameboyStarAdded']) {
+    if ((this.draggingItem === 'book' || this.draggingItem === 'gameboy') && this.state.stars['gameboyStarAdded']) {
       const distance = (a, b) => Math.pow((parseInt(a.x) - b.x) * (parseInt(a.x) - b.x) + (parseInt(a.y) - b.y) * (parseInt(a.y) - b.y), 0.5);
-      const gameboyPlace =
-        this.state.subLevel === '2' ? (
-          this.state.items.book.zIndex > this.state.items.gameboy.zIndex &&
-          distance(this.state.items.gameboy, { x: 60, y: 100 }) < 100 &&
-          distance(this.state.items.gameboy, { x: 60, y: 100 }) < 100
-        ) : (
-            distance(this.state.items.gameboy, { x: 60, y: 100 }) < 100
-          );
+      const gameboyPlace = distance(this.state.items.gameboy, { x: 60, y: 100 }) < 100;
+      const bookPlace = distance(this.state.items.book, { x: 80, y: 200 }) < 100 && this.state.items.book.zIndex > this.state.items.gameboy.zIndex && gameboyPlace;
       if (gameboyPlace)
         this.state.stars['gameboyPlace'] = true;
+      if (bookPlace)
+        this.state.stars['bookPlace'] = true;
       this.forceUpdate();
     }
     this.isDragging = false;
