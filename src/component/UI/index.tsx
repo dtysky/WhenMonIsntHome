@@ -49,6 +49,7 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
             this.props.onBack();
           }}
         />
+        {this.props.children}
       </div>
     );
   }

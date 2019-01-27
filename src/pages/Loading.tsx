@@ -5,6 +5,9 @@
  * @Date   : 1/26/2019, 11:31:19 AM
  */
 import * as React from 'react';
+import * as cx from 'classnames';
+
+import assets from '../assets';
 
 interface IPropTypes {
   progress: number;
@@ -20,9 +23,9 @@ export default class Loading extends React.PureComponent<IPropTypes, IStateTypes
     const {progress, name} = this.props;
 
     return (
-      <div>
-        <p>{name}</p>
-        <p>{progress}</p>
+      <div className={cx('loading')}>
+        <img className={cx('loading-bg')} src={assets.getSrc('loading')} />
+        <img className={cx('loading-img')} src={assets.getSrc('loading-img')} />
       </div>
     );
   }
