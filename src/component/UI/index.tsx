@@ -58,6 +58,7 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
     const scale = window.innerWidth / 414;
     const factor = (scale - 1) / 2;
     const {totalTime, countDown} = this.props;
+    const progress = countDown / totalTime;
 
     return (
       <div
@@ -66,7 +67,12 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
           transform: `scale(${scale}) translateX(${factor * 414}px)`
         }}
       >
-        <div className={cx('ui-countdown-shoes')}>
+        <div
+          className={cx('ui-countdown-shoes')}
+          style={{
+            transform: `translateX(${360 * (1 - progress)}px)`
+          }}
+        >
           <img src={assets.getSrc('shoes1')} />
           <img src={assets.getSrc('shoes2')} />
         </div>
@@ -76,7 +82,7 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
             className={cx('ui-countdown-bar-bar')}
             src={assets.getSrc('progress-bar')}
             style={{
-              transform: `scaleX(${countDown / totalTime})`
+              transform: `scaleX(${progress})`
             }}
           />
           <img className={cx('ui-countdown-bar-mom')} src={assets.getSrc('mom-come-soon')} />

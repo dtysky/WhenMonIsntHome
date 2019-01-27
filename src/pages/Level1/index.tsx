@@ -61,9 +61,16 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
       },
     },
   };
+<<<<<<< HEAD
 
+=======
+  private bgm: React.RefObject<HTMLAudioElement> = React.createRef();
+>>>>>>> 0416986471422834ff96a7c4c390370d6f420198
   public async componentDidMount() {
     const subLevel = this.props.match.params.sub;
+  }
+  public componentWillUnmount() {
+    this.bgm.current.pause();
   }
   isDragging = false;
   mouseDownX;
@@ -175,7 +182,14 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
           this.setState({gameState: GameState.main})
         }
       }}
-    />
+    >
+      <audio
+        src={require('../../assets/level3-bgm.mp3')}
+        ref={this.bgm}
+        loop
+        autoPlay
+      />
+    </UI>
     if (this.state.gameState === GameState.gameboy) {
       return <div style={{height: '100%', width: '100%', position: 'fixed', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
         {common}

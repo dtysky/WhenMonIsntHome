@@ -60,12 +60,16 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
       },
     },
   };
+  private bgm: React.RefObject<HTMLAudioElement> = React.createRef();
   constructor(props) {
     super(props);
     console.log('#');
   }
   public async componentDidMount() {
     const subLevel = this.props.match.params.sub;
+  }
+  public componentWillUnmount() {
+    this.bgm.current.pause();
   }
   isDragging = false;
   mouseDownX;
@@ -172,6 +176,12 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
           this.setState({gameState: GameState.main});
         }
       }}>
+      <audio
+        src={require('../../assets/level3-bgm.mp3')}
+        ref={this.bgm}
+        loop
+        autoPlay
+      />
     </UI>;
     if (this.state.gameState === GameState.tvSet) {
       return <div className="tvSet">
@@ -236,8 +246,8 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
         }}
       >
         <img className="bg-img" src={require('../../assets/level2_bg.png')}/>
-        <div onTouchMove={() => document.querySelector('html').scrollLeft -= 10} className="left"/>
-        <div onTouchMove={() => document.querySelector('html').scrollLeft += 10} className="right"/>
+        <div onTouchMove={() => (document.querySelector('.bg') as any).style.marginLeft -= 10} className="left"/>
+        <div onTouchMove={() => (document.querySelector('.bg') as any).style.marginLeft += 10} className="right"/>
         <div className="test"/>
         <div className="tv-set" onClick={() => {
           if (this.state.stars['channelResume']) {

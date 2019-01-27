@@ -69,7 +69,9 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     acceleration: 0,
     vigilance: 0,
     starCount: 0
-  }
+  };
+  private bgm: React.RefObject<HTMLAudioElement> = React.createRef();
+  private foot: React.RefObject<HTMLAudioElement> = React.createRef();
 
   public async componentDidMount() {
     this.updateSubLevel(this.props.match.params.sub);
@@ -79,12 +81,17 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     this.updateSubLevel(nextProps.match.params.sub);
   }
 
+  public componentWillUnmount() {
+    this.bgm.current.pause();
+  }
+
   private updateSubLevel(sub: string) {
     const subLevel = parseInt(sub, 10) - 1;
 
     this.setState({
       subLevel: subLevel,
       distance: 0,
+      countDown: config.sub[subLevel].timeout,
       state: 'preStart',
       preFoot: 'right',
       currentFoot: 'left',
@@ -97,6 +104,8 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
       vigilance: 0,
       starCount: 0
     });
+
+    this.bgm.current.volume = .5;
   }
 
   private handleTouchStart(name: 'left' | 'right', event: React.TouchEvent<HTMLImageElement>) {
@@ -226,6 +235,11 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
       goodTime, goodVigilance
     } = config.sub[subLevel];
 
+    const sound = this.foot.current;
+    const volume = velocity / overVelocity;
+    sound.volume = (volume > 1 ? 1 : volume) / 2;
+    sound.play();
+
     if (velocity > overVelocity) {
       vigilance = maxVigilance;
       timer.stop();
@@ -243,8 +257,6 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     }
 
     distance += heightToMeter(currentTop) * topToStepFactor;
-
-    console.log(velocity, distance)
 
     if (distance >= distDistance) {
       timer.stop();
@@ -276,6 +288,15 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         {this.renderScene()}
         {this.renderFoots()}
         {this.renderUI()}
+        <audio
+          src={require('../../assets/level3-bgm.mp3')}
+          ref={this.bgm}
+          loop
+        />
+        <audio
+          src={require('../../assets/foot.mp3')}
+          ref={this.foot}
+        />
       </div>
     );
   }
@@ -349,6 +370,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
               }
             }
           );
+          this.bgm.current.play();
           this.setState({state: 'idle'});
         }}
         onBack={() => this.props.history.push('/title')}
@@ -357,7 +379,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
           className={cx('level3-vigilance')}
           style={{color}}
         >
-          警戒值： {this.state.vigilance.toFixed(2)}
+          警觉值： {this.state.vigilance.toFixed(2)}
         </p>
       </UI>
     );

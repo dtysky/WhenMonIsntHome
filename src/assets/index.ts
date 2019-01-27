@@ -15,7 +15,7 @@ const assets: IResourceEntry[] = [];
   'progress-box', 'result-bg', 'shoes1', 'shoes2', 'sofa',
   'star-1', 'star-3', 'star-2', 'star-yellow', 'star',
   'level3-bg', 'level3-notice', 'level3-bar', 'level3-foot-left', 'level3-foot-right',
-  'loading', 'loading-img'
+  'loading', 'loading-img', 'title-bg', 'title-start'
 ].forEach(name => {
   assets.push({
     preload: true,
