@@ -107,7 +107,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     this.interval = setInterval(() => {
       const countDown = (timeout - (Date.now() - t)) / 1000;
       this.setState({ countDown, totalTime: timeout / 1000 });
-      if (countDown >= timeout / 1000) {
+      if (countDown < 0) {
         clearInterval(this.interval);
         this.setState({
           gameState: GameState.result,
@@ -155,7 +155,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
 
     const common = <UI
       state={uiState as any}
-      level={2}
+      level={1}
       subLevel={parseInt(this.state.subLevel, 10)}
       countDown={this.state.countDown}
       starCount={Object.keys(this.state.stars).length}

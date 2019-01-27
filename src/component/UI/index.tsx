@@ -138,6 +138,10 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
             let {level, subLevel} = this.props;
             subLevel += 1;
 
+            if (subLevel == 3 && level < 3) {
+              level++;
+              subLevel = 1;
+            }
             if (subLevel > 3) {
               level += 1;
               subLevel = 1;
@@ -147,7 +151,7 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
               return;
             }
 
-            this.props.history.push(`/level/${level}/${subLevel}`);
+            location.href = `/level/${level}/${subLevel}`;
           }}
         />
         <div
