@@ -4,6 +4,18 @@
  * @Link   : dtysky.moe
  * @Date   : 1/27/2019, 2:54:00 AM
  */
+@keyframes shoes-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(30deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
 .ui {
   position: absolute;
   left: 0;
@@ -36,9 +48,11 @@
         position: absolute;
         left: 0;
         height: $height;
+        animation: shoes-rotate .6s ease-in-out infinite;
 
         &:first-child {
           position: relative;
+          animation-delay: .3s;
         }
       }
     }
@@ -53,7 +67,7 @@
         position: absolute;
         height: $height;
         right: 4px;
-        transform-origin: left;
+        transform-origin: right;
       }
 
       &-box {

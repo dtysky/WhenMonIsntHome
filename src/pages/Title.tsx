@@ -17,11 +17,24 @@ interface IPropTypes extends RouteComponentProps<{}> {
 }
 
 interface IStateTypes {
-
+  started: boolean;
 }
 
 export default class Title extends React.Component<IPropTypes, IStateTypes> {
+  public state: IStateTypes = {
+    started: false
+  };
+
   public render() {
+    if (!this.state.started) {
+      return (
+        <div className={'title'} onClick={() => this.setState({started: true})}>
+          <img className={'title-bg'} src={assets.getSrc('title-bg')} />
+          <img className={'title-start'} src={assets.getSrc('title-start')} />
+        </div>
+      )
+    }
+
     return (
       <UI
         state={'select'}

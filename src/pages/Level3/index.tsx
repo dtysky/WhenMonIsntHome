@@ -85,6 +85,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     this.setState({
       subLevel: subLevel,
       distance: 0,
+      countDown: config.sub[subLevel].timeout,
       state: 'preStart',
       preFoot: 'right',
       currentFoot: 'left',
