@@ -86,7 +86,7 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
   }
 
   public renderResult() {
-    let {state, level, subLevel} = this.props;
+    let {state} = this.props;
 
     if (state !== 'result') {
       return;
@@ -98,19 +98,23 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
         <img src={assets.getSrc(`star-${this.props.starCount}`)} />
         <div
           className={cx('ui-result-restart')}
-          onClick={() => this.props.history.push(`/level/${level}/${subLevel}`)}
+          onClick={() => {
+            const {level, subLevel} = this.props;
+            this.props.history.push(`/level/${level}/${subLevel}`)
+          }}
         />
         <div
           className={cx('ui-result-next')}
           onClick={() => {
+            let {level, subLevel} = this.props;
             subLevel += 1;
 
-            if (subLevel >= 3) {
+            if (subLevel > 3) {
               level += 1;
               subLevel = 1;
             }
 
-            if (level === 3 && subLevel === 3) {
+            if (level >= 4) {
               return;
             }
 
