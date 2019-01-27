@@ -161,7 +161,19 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
       starCount={Object.keys(this.state.stars).length}
       totalTime={this.state.totalTime}
       onStart={this.start}
-      onBack={() => this.props.history.push('/title')}
+      onBack={() => {
+        if (this.state.gameState === GameState.gameboy) {
+          clearTimeout(this.gameTimer);
+          this.setState({gameState: this.state.subLevel === '2' ? GameState.shelf : GameState.desk});
+          this.state.items.gameboy.x = 300;
+          this.state.items.gameboy.y = 300;
+          this.forceUpdate();
+        } else if (this.state.gameState === GameState.main) {
+          this.props.history.push('/title');
+        } else {
+          this.setState({gameState: GameState.main})
+        }
+      }}
     />
     if (this.state.gameState === GameState.gameboy) {
       return <div style={{height: '100%', width: '100%', position: 'fixed', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
@@ -174,14 +186,6 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         }}>
           <div className="cup"/>
         </div>
-
-        <button className="back" onClick={() => {
-          clearTimeout(this.gameTimer);
-          this.setState({gameState: this.state.subLevel === '2' ? GameState.shelf : GameState.desk});
-          this.state.items.gameboy.x = 300;
-          this.state.items.gameboy.y = 300;
-          this.forceUpdate();
-        }}>back</button>
       </div>;
     }
     if (this.state.gameState === GameState.shelf) {
@@ -217,7 +221,6 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
             onTouchStart={(e) => this.itemOnMouseDown(e, i)}
           />)
         }
-        <button className="back" onClick={() => this.setState({gameState: GameState.main})}>back</button>
         </div>
       </Modal>;
     }
@@ -254,7 +257,6 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
             onTouchStart={(e) => this.itemOnMouseDown(e, i)}
           />)
         }
-        <button className="back" onClick={() => this.setState({gameState: GameState.main})}>back</button>
         </div>
       </Modal>;
     }
