@@ -40,7 +40,6 @@
 
   &-foot {
     $width: 20px;
-    background: #f00;
     width: $width;
     position: absolute;
     height: 100%;
@@ -54,14 +53,16 @@
     }
 
     &-bg {
-      // background: #0f0;
+      height: 100%;
+      position: absolute;
+      left: 30%;
+      top: 0;
     }
 
     &-button {
       $size: 28px;
       position: absolute;
       width: $size;
-      height: $size;
       left: -($size - $width) / 2;
       // transform: translateY(-50%);
     }

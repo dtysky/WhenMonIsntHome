@@ -82,6 +82,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
 
     this.setState({
       subLevel: subLevel,
+      distance: 0,
       state: 'preStart',
       preFoot: 'right',
       currentFoot: 'left',
@@ -278,7 +279,13 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
             left: `${-distance / distDistance * 100}%`
           }}
         />
-        <img className={cx('level3-scene-snoze')} src={assets.getSrc('level3-snoze')} />
+        <img
+          className={cx('level3-scene-snoze')}
+          src={assets.getSrc('level3-snoze')}
+          style={{
+            transform: `scaleX(${distance < 5 ? 1 : -1})`
+          }}
+        />
       </div>
     );
   }
@@ -302,7 +309,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         level={3}
         subLevel={subLevel + 1}
         countDown={countDown}
-        starCount={1}
+        starCount={state === 'success' ? 1 : 0}
         totalTime={config.sub[subLevel].timeout}
         onStart={() => {
           timer.start(
@@ -344,12 +351,13 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
               key={name}
               className={cx('level3-foot', `level3-foot-${name}`)}
             >
-              <div
+              <img
                 className={cx('level3-foot-bg')}
+                src={assets.getSrc('level3-bar')}
               />
               <img
                 className={cx('level3-foot-button')}
-                src={''}
+                src={assets.getSrc(`level3-foot-${name}`)}
                 style={{
                   bottom: name === currentFoot ? currentY : 0
                 }}

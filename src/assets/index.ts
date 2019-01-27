@@ -13,8 +13,8 @@ const assets: IResourceEntry[] = [];
   'level1_background', 'level1_desk_withconlcle', 'level1_desk', 'level1_shelf_withconcle',
   'level1_shelf', 'level1_sofa_withconcle', 'mom-come-soon', 'progress-bar',
   'progress-box', 'result-bg', 'shoes1', 'shoes2', 'sofa',
-  'star-0', 'star-1', 'star-3', 'star-2', 'star-yellow', 'star',
-  'level3-bg', 'level3-notice'
+  'star-1', 'star-3', 'star-2', 'star-yellow', 'star',
+  'level3-bg', 'level3-notice', 'level3-bar', 'level3-foot-left', 'level3-foot-right'
 ].forEach(name => {
   assets.push({
     preload: true,
@@ -27,11 +27,19 @@ const assets: IResourceEntry[] = [];
 
 assets.push({
   preload: true,
-    name: 'level3-snoze',
-    src: require('./level3-snoze.gif'),
-    type: 'image',
-    weight: 1
-})
+  name: 'level3-snoze',
+  src: require('./level3-snoze.gif'),
+  type: 'image',
+  weight: 1
+});
+
+assets.push({
+  preload: true,
+  name: 'star-0',
+  src: require('./star-0.gif'),
+  type: 'image',
+  weight: 1 
+});
 
 const resManager = new ResourceManager();
 resManager.init(assets);
