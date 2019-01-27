@@ -26,6 +26,7 @@ interface IStateTypes {
   gameState: GameState,
   progress: number,
   stars: number,
+  channel: number,
   subLevel: string,
   getController: boolean,
   items: {[name:string]: {
@@ -39,10 +40,12 @@ interface IStateTypes {
 }
 
 class Level2 extends React.Component<IPropTypes, IStateTypes> {
+  channels = 3;
   state = {
     gameState: GameState.confirm,
     progress: 0,
     stars: 0,
+    channel: 0,
     getController: false,
     subLevel: this.props.match.params.sub,
     items: {
@@ -139,8 +142,9 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
     </div>;
     if (this.state.gameState === GameState.tvSet) {
       return <div className="tvSet">
-        <div className="btnPrev"/>
-        <div className="btnNext"/>
+        <div className={'screen' + this.state.channel}/>
+        <div onClick={() => this.setState({channel: (this.state.channel - 1) < 0 ? this.channels - 1 : (this.state.channel - 1)})} className="btnPrev"/>
+        <div onClick={() => this.setState({channel: (this.state.channel + 1) % this.channels})} className="btnNext"/>
         <div className="btnTv"/>
         <button className="back" onClick={() => this.setState({gameState: GameState.main})}>back</button>
       </div>;
