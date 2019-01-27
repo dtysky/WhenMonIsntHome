@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom';
 
 import assets from '../../assets';
+import UI from '../../component/UI'
 import Modal from '../../component/Modal';
 
 enum GameState {
@@ -22,7 +23,8 @@ interface IPropTypes extends RouteComponentProps<{sub: string}> {
 
 interface IStateTypes {
   gameState: GameState,
-  progress: number,
+  totalTime: number;
+  countDown: number,
   stars: {[t:string]: true},
   subLevel: string,
   items: {[name:string]: {
@@ -38,7 +40,8 @@ interface IStateTypes {
 class Level1 extends React.Component<IPropTypes, IStateTypes> {
   state = {
     gameState: GameState.confirm,
-    progress: 0,
+    totalTime: 0,
+    countDown: 0,
     stars: {},
     subLevel: this.props.match.params.sub,
     items: {
@@ -104,9 +107,9 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     const timeout = 20000;
     let t = Date.now();
     this.interval = setInterval(() => {
-      const progress = (Date.now() - t) / (timeout * 1000) * 100;
-      this.setState({ progress });
-      if (progress >= 100) {
+      const countDown = (timeout - (Date.now() - t)) / 1000;
+      this.setState({ countDown, totalTime: timeout / 1000 });
+      if (countDown >= timeout / 1000) {
         clearInterval(this.interval);
         this.setState({
           gameState: GameState.result,
@@ -115,7 +118,8 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     }, 16);
     this.setState({
       gameState: GameState.main,
-      progress: 0,
+      countDown: 0,
+      totalTime: 0
     });
   }
   itemOnMouseDown = (e, itemName) => {
@@ -131,25 +135,36 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   }
   gameTimer;
   public render() {
-    if (this.state.gameState === GameState.confirm) {
-      return <Modal show={true} closeOnClick={() => {console.log('x')}}>
-        <div>关卡挑战目标</div>
-        <div>1.把游戏机放回原位</div>
-        <div>2.观看电视不少于5s</div>
-        <div>3.满足关卡快乐值</div>
-        <button onClick={this.start}>start</button>
-      </Modal>;
+    const {gameState} = this.state;
+    // if (this.state.gameState === GameState.confirm) {
+    //   return <Modal show={true} closeOnClick={() => {console.log('x')}}>
+    //     <div>关卡挑战目标</div>
+    //     <div>1.把游戏机放回原位</div>
+    //     <div>2.观看电视不少于5s</div>
+    //     <div>3.满足关卡快乐值</div>
+    //     <button onClick={this.start}>start</button>
+    //   </Modal>;
+    // }
+    let uiState = 'normal';
+
+    if (gameState === GameState.result) {
+      uiState = 'result';
     }
-    const common = <div>
-        <div className="progress" style={{width: window.innerWidth * 0.7}}>
-          <div className="progress-bar" style={{width: this.state.progress + '%'}}/>
-        </div>
-        <div className={'stars star-' + Object.keys(this.state.stars).length}>
-          <div className="star"/>
-          <div className="star"/>
-          <div className="star"/>
-        </div>
-    </div>;
+
+    if (gameState === GameState.confirm) {
+      uiState = 'desc';
+    }
+
+    const common = <UI
+      state={uiState as any}
+      level={2}
+      subLevel={parseInt(this.state.subLevel, 10)}
+      countDown={this.state.countDown}
+      starCount={Object.keys(this.state.stars).length}
+      totalTime={this.state.totalTime}
+      onStart={this.start}
+      onBack={() => this.props.history.push('/title')}
+    />
     if (this.state.gameState === GameState.gameboy) {
       return <div style={{height: '100%', width: '100%', position: 'fixed', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
         {common}
@@ -245,9 +260,6 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         </div>
       </Modal>;
     }
-    if (this.state.gameState === GameState.result) {
-      return null;
-    }
     if (this.state.gameState === GameState.main) {
       return <div
         className="bg"
@@ -257,6 +269,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
           }
         }}
       >
+        {common}
         <img className="bg-img" src={require('../../assets/level1_background.png')}/>
         <div className="desk" onClick={() => {
           if (this.state.subLevel === '1') {
@@ -271,9 +284,10 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
           }
         }}/>
         <div className="sofa"/>
-        {common}
       </div>;
     }
+
+    return common;
   }
 }
 

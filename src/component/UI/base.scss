@@ -5,14 +5,20 @@
  * @Date   : 1/27/2019, 2:54:00 AM
  */
 .ui {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
   &-countdown {
     $height: 36px;
     position: absolute;
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     align-items: center;
     width: 96%;
-    left: 2%;
+    // left: 2%;
     top: 12px;
 
     img {

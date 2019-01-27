@@ -94,7 +94,8 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
       t: 0,
       velocity: 0,
       acceleration: 0,
-      vigilance: 0
+      vigilance: 0,
+      starCount: 0
     });
   }
 
