@@ -244,14 +244,11 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
             ref.style.width = (4000 / 2484 * window.innerHeight) + 'px';
           }
         }}
+        style={{
+          marginLeft: '-130%',
+        }}
       >
         <img className="bg-img" src={require('../../assets/level2_bg.png')}/>
-        <div onTouchMove={() => {
-          (document.querySelector('.bg') as any).style.marginLeft = (parseInt((document.querySelector('.bg') as any).style.marginLeft || 0) + 10) + 'px';
-        }} className="left"/>
-        <div onTouchMove={() => {
-          (document.querySelector('.bg') as any).style.marginLeft = (parseInt((document.querySelector('.bg') as any).style.marginLeft || 0) - 10) + 'px';
-        }} className="right"/>
         <div className="test"/>
         <div className="tv-set" onClick={() => {
           if (this.state.stars['channelResume']) {
