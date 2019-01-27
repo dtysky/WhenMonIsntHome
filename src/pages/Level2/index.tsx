@@ -94,7 +94,7 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
   }
   interval;
   start = () => {
-    const timeout = 20000;
+    const timeout = 20000000;
     let t = Date.now();
     this.interval = setInterval(() => {
       const countDown = (timeout - (Date.now() - t)) / 1000;
@@ -176,7 +176,7 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
     if (this.state.gameState === GameState.tvSet) {
       return <div className="tvSet">
         {common}
-        <div className={'screen' + this.state.channel}/>
+        <div className={'screen' + this.state.channel}>{this.state.channel}</div>
         <div onClick={() => this.setState({channel: (this.state.channel - 1) < 0 ? this.channels - 1 : (this.state.channel - 1)}, this.channelOnChange)} className="btnPrev"/>
         <div onClick={() => this.setState({channel: (this.state.channel + 1) % this.channels}, this.channelOnChange)} className="btnNext"/>
         <div className="btnTv"/>
@@ -236,6 +236,9 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
         }}
       >
         <img className="bg-img" src={require('../../assets/level2_bg.png')}/>
+        <div onTouchMove={() => document.querySelector('html').scrollLeft -= 10} className="left"/>
+        <div onTouchMove={() => document.querySelector('html').scrollLeft += 10} className="right"/>
+        <div className="test"/>
         <div className="tv-set" onClick={() => {
           if (this.state.stars['channelResume']) {
             return;
