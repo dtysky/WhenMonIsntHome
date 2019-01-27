@@ -271,6 +271,8 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
       >
         {common}
         <img className="bg-img" src={require('../../assets/level1_background.png')}/>
+        <div onTouchMove={() => document.querySelector('html').scrollLeft -= 10} className="left"/>
+        <div onTouchMove={() => document.querySelector('html').scrollLeft += 10} className="right"/>
         <div className="desk" onClick={() => {
           if (this.state.subLevel === '1') {
             this.state.stars['gameboyFound'] = false;
