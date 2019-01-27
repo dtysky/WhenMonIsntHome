@@ -61,11 +61,6 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
       },
     },
   };
-<<<<<<< HEAD
-
-=======
-  private bgm: React.RefObject<HTMLAudioElement> = React.createRef();
->>>>>>> 0416986471422834ff96a7c4c390370d6f420198
   public async componentDidMount() {
     const subLevel = this.props.match.params.sub;
   }
