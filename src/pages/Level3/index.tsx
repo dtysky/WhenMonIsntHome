@@ -42,6 +42,7 @@ interface IStateTypes {
   velocity: number;
   acceleration: number;
   vigilance: number;
+  starCount: number;
 }
 
 const CONSTANTS = {
@@ -66,7 +67,8 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
     t: 0,
     velocity: 0,
     acceleration: 0,
-    vigilance: 0
+    vigilance: 0,
+    starCount: 0
   }
 
   public async componentDidMount() {
@@ -215,17 +217,18 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   private end() {
     let {
       velocity, vigilance, currentTop,
-      currentFoot, subLevel, distance
+      currentFoot, subLevel, distance, countDown
     } = this.state;
     const {
       topToStepFactor, distDistance,
-      maxVigilance, overVelocity, vigilanceTh
+      maxVigilance, overVelocity, vigilanceTh,
+      goodTime, goodVigilance
     } = config.sub[subLevel];
 
     if (velocity > overVelocity) {
       vigilance = maxVigilance;
       timer.stop();
-      this.setState({state: 'fail'});
+      this.setState({state: 'fail', starCount: 0});
       return;
     }
 
@@ -234,7 +237,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
 
     if (vigilance >= maxVigilance) {
       timer.stop();
-      this.setState({state: 'fail'});
+      this.setState({state: 'fail', starCount: 0});
       return;
     }
 
@@ -244,7 +247,17 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
 
     if (distance >= distDistance) {
       timer.stop();
-      this.setState({vigilance, distance, state: 'success'});
+      let starCount = 1;
+
+      if (countDown < goodTime) {
+        starCount += 1;
+      }
+
+      if (vigilance < goodVigilance) {
+        starCount += 1;
+      }
+
+      this.setState({vigilance, distance, state: 'success', starCount});
       return;
     }
 
@@ -291,7 +304,21 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   }
 
   public renderUI() {
-    const {state, distance, velocity, subLevel, countDown} = this.state;
+    const {
+      state, starCount, subLevel,
+      countDown, vigilance
+    } = this.state;
+    const {maxVigilance} = config.sub[subLevel];
+
+    let color = '#fff';
+
+    if (vigilance / maxVigilance > .5) {
+      color = '#ff0';
+    }
+
+    if (vigilance / maxVigilance > .8) {
+      color = '#f00';
+    }
 
     let uiState = 'normal';
 
@@ -309,7 +336,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         level={3}
         subLevel={subLevel + 1}
         countDown={countDown}
-        starCount={state === 'success' ? 1 : 0}
+        starCount={starCount}
         totalTime={config.sub[subLevel].timeout}
         onStart={() => {
           timer.start(
@@ -324,17 +351,15 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
           this.setState({state: 'idle'});
         }}
         onBack={() => this.props.history.push('/title')}
-      />
+      >
+        <p
+          className={cx('level3-vigilance')}
+          style={{color}}
+        >
+          警戒值： {this.state.vigilance.toFixed(2)}
+        </p>
+      </UI>
     );
-
-    // return (
-    //   <div className={cx('level3-ui')}>
-    //     <p>state: {state}</p>
-    //     <p>countDown: {countDown.toFixed(1)}</p>
-    //     <p>velocity: {velocity.toFixed(2)}</p>
-    //     <p>distance: {distance.toFixed(2)}</p>
-    //   </div>
-    // );
   }
 
   public renderFoots() {

@@ -9,30 +9,36 @@ export default {
   sub: [
     {
       timeout: 10,
+      goodTime: 6,
       distDistance: 10,
       topToStepFactor: 1,
       maxVigilance: 100,
       vigilanceTh: 10,
+      goodVigilance: 50,
       overVelocity: 1.5,
       autoReleaseTime: .5,
       mass: 30
     },
     {
       timeout: 10,
+      goodTime: 6,
       distDistance: 10,
       topToStepFactor: 1,
-      maxVigilance: 100,
+      maxVigilance: 2,
       vigilanceTh: .75,
+      goodVigilance: 1,
       overVelocity: 1.5,
       autoReleaseTime: .3,
       mass: 30
     },
     {
       timeout: 6,
+      goodTime: 6,
       distDistance: 10,
       topToStepFactor: 1,
-      maxVigilance: 60,
+      maxVigilance: 2,
       vigilanceTh: .5,
+      goodVigilance: 1,
       overVelocity: 1,
       autoReleaseTime: .3,
       mass: 30
