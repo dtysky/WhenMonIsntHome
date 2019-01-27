@@ -181,9 +181,17 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
           onMouseMove={this.onMouseMove}
           onMouseUp={this.onMouseUp}
           onTouchEnd={this.onMouseUp}
+          onClick={() => {
+            if (this.state.stars['channelResume'] && !this.state.stars['controllerResume']) {
+              this.state.stars['controllerResume'] = true;
+              this.state.items.controller.x = 60;
+              this.state.items.controller.y = 160;
+              this.forceUpdate();
+            }
+          }}
           style={{width: window.innerWidth, height: window.innerHeight, background: '#fff'}}>
           {common}
-          {!this.state.getController && Object.keys(this.state.items).map(i => <div
+          {(!this.state.getController || this.state.stars['controllerResume']) && Object.keys(this.state.items).map(i => <div
             className={i}
             key={i}
             ref={this.state.items[i].ref}
@@ -219,7 +227,16 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
         }}
       >
         <img className="bg-img" src={require('../../assets/level2_bg.png')}/>
-        <div className="tv-set" onClick={() => this.setState({gameState: this.state.getController || this.state.subLevel === '1' ? GameState.tvSet : GameState.tvSetEmpty})}/>
+        <div className="tv-set" onClick={() => {
+          if (this.state.stars['channelResume']) {
+            return;
+          }
+          if (this.state.subLevel === '1') {
+            this.state.stars['tvFound'] = true;
+          }
+          const gameState = this.state.getController || this.state.subLevel === '1' ? GameState.tvSet : GameState.tvSetEmpty;
+          this.setState({gameState});
+        }}/>
         <div className="shelf2" onClick={() => this.state.subLevel === '2' && this.setState({gameState: GameState.shelf})}/>
         <div className="sofa2"/>
         {common}
