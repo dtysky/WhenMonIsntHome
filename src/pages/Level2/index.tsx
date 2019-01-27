@@ -98,7 +98,7 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
   }
   interval;
   start = () => {
-    const timeout = 20000000;
+    const timeout = 20000;
     let t = Date.now();
     this.interval = setInterval(() => {
       const countDown = (timeout - (Date.now() - t)) / 1000;
