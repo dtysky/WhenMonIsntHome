@@ -29,6 +29,10 @@ interface IStateTypes {
 }
 
 class UI extends React.Component<IPropTypes, IStateTypes> {
+  private playSound() {
+
+  }
+
   public render() {
     return (
       <div className={cx('ui')}>
@@ -40,7 +44,10 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
         <img
           className={cx('ui-button-back')}
           src={assets.getSrc('button-back')}
-          onClick={() => this.props.onBack()}
+          onClick={() => {
+            this.playSound();
+            this.props.onBack();
+          }}
         />
       </div>
     );
@@ -111,10 +118,14 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
     return (
       <div className={cx('ui-result')}>
         <img src={assets.getSrc('result-bg')} />
-        <img src={assets.getSrc(`star-${this.props.starCount}`)} />
+        <img
+          className={cx(`star-${this.props.starCount}`)}
+          src={assets.getSrc(`star-${this.props.starCount}`)}
+        />
         <div
           className={cx('ui-result-restart')}
           onClick={() => {
+            this.playSound();
             const {level, subLevel} = this.props;
             this.props.history.push(`/level/${level}/${subLevel}`)
           }}
@@ -122,6 +133,7 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
         <div
           className={cx('ui-result-next')}
           onClick={() => {
+            this.playSound();
             let {level, subLevel} = this.props;
             subLevel += 1;
 
@@ -139,7 +151,10 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
         />
         <div
           className={cx('ui-result-back')}
-          onClick={() => this.props.onBack()}
+          onClick={() => {
+            this.playSound();
+            this.props.onBack();
+          }}
         />
       </div>
     );
@@ -176,7 +191,10 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
               left: `${left + col * (width + colSpace)}%`,
               top: `${top + row * (height + rowSpace)}%`
             }}
-            onClick={() => this.props.history.push(`/level/${row + 1}/${col + 1}`)}
+            onClick={() => {
+              this.playSound();
+              this.props.history.push(`/level/${row + 1}/${col + 1}`);
+            }}
           />
         ))}
       </div>
@@ -201,11 +219,17 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
         />
         <div
           className={cx('ui-desc-start')}
-          onClick={() => this.props.onStart()}
+          onClick={() => {
+            this.playSound();
+            this.props.onStart();
+          }}
         />
         <div
           className={cx('ui-desc-back')}
-          onClick={() => this.props.onBack()}
+          onClick={() => {
+            this.playSound();
+            this.props.onBack();
+          }}
         />
       </div>
     )
