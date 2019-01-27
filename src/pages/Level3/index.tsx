@@ -131,7 +131,8 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
 
   private startPunishing() {
     const {autoReleaseTime} = config.sub[this.state.subLevel];
-    const obj = {y: this.state.currentY};
+    const y = this.state.currentY;
+    const obj = {y};
 
     const velocity = heightToMeter(obj.y) / autoReleaseTime;
     this.setState({velocity});
@@ -144,7 +145,12 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
 
         this.setState({currentY: y});
       },
-      onComplete: () => this.end()
+      onComplete: () => {
+        if (this.state.currentTop === 0) {
+          this.state.currentTop = y;
+        }
+        this.end();
+      }
     });
   }
 
@@ -260,9 +266,19 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
   }
 
   public renderScene() {
+    const {subLevel, distance} = this.state;
+    const {distDistance} = config.sub[subLevel];
+
     return (
       <div className={cx('level3-scene')}>
-
+        <img
+          className={cx('level3-scene-bg')}
+          src={assets.getSrc('level3-bg')}
+          style={{
+            left: `${-distance / distDistance * 100}%`
+          }}
+        />
+        <img className={cx('level3-scene-snoze')} src={assets.getSrc('level3-snoze')} />
       </div>
     );
   }
@@ -287,6 +303,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
         subLevel={subLevel + 1}
         countDown={countDown}
         starCount={1}
+        totalTime={config.sub[subLevel].timeout}
         onStart={() => {
           timer.start(
             config.sub[subLevel].timeout,

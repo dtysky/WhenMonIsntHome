@@ -29,6 +29,7 @@ export default class Title extends React.Component<IPropTypes, IStateTypes> {
         subLevel={1}
         starCount={0}
         countDown={0}
+        totalTime={1}
         onStart={() => {}}
         onBack={() => {}}
       />
