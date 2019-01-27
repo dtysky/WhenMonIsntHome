@@ -25,7 +25,7 @@ interface IPropTypes extends RouteComponentProps<{sub: string}> {
 interface IStateTypes {
   gameState: GameState,
   progress: number,
-  stars: number,
+  stars: {[s:string]:any},
   channel: number,
   subLevel: string,
   getController: boolean,
@@ -44,7 +44,7 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
   state = {
     gameState: GameState.confirm,
     progress: 0,
-    stars: 0,
+    stars: {},
     channel: 0,
     getController: false,
     subLevel: this.props.match.params.sub,
@@ -94,11 +94,7 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
       this.setState({ progress });
       if (progress >= 100) {
         clearInterval(this.interval);
-        const distance = (a, b) => Math.pow((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) , 0.5);
         this.setState({
-          stars: this.state.stars + (
-                distance(this.state.items.controller, { x: 60, y: 100 }) < 100 ? 1 : 0
-          ),
           gameState: GameState.result,
         });
       }
@@ -120,6 +116,25 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
     Object.keys(items).forEach(i => this.zIndexMap[i] = items[i].zIndex);
   }
   gameTimer;
+  channelOnChange = () => {
+    clearTimeout(this.gameTimer);
+    if (this.state.stars['channelWatched']) {
+      if (this.state.channel !== 0) {
+        delete this.state.stars['channelResume']
+      } else {
+        this.state.stars['channelResume'] = true;
+      }
+      this.forceUpdate();
+      return;
+    }
+    if (this.state.channel !== 2) {
+      return;
+    }
+    this.gameTimer = setTimeout(() => {
+      this.state.stars['channelWatched'] = true;
+      this.forceUpdate();
+    }, 5000);
+  }
   public render() {
     if (this.state.gameState === GameState.confirm) {
       return <Modal show={true} closeOnClick={() => {console.log('x')}}>
@@ -134,7 +149,7 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
         <div className="progress" style={{width: window.innerWidth * 0.7}}>
           <div className="progress-bar" style={{width: this.state.progress + '%'}}/>
         </div>
-        <div className={'stars star-' + this.state.stars}>
+        <div className={'stars star-' + Object.keys(this.state.stars).length}>
           <div className="star"/>
           <div className="star"/>
           <div className="star"/>
@@ -142,15 +157,20 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
     </div>;
     if (this.state.gameState === GameState.tvSet) {
       return <div className="tvSet">
+        {common}
         <div className={'screen' + this.state.channel}/>
-        <div onClick={() => this.setState({channel: (this.state.channel - 1) < 0 ? this.channels - 1 : (this.state.channel - 1)})} className="btnPrev"/>
-        <div onClick={() => this.setState({channel: (this.state.channel + 1) % this.channels})} className="btnNext"/>
+        <div onClick={() => this.setState({channel: (this.state.channel - 1) < 0 ? this.channels - 1 : (this.state.channel - 1)}, this.channelOnChange)} className="btnPrev"/>
+        <div onClick={() => this.setState({channel: (this.state.channel + 1) % this.channels}, this.channelOnChange)} className="btnNext"/>
         <div className="btnTv"/>
-        <button className="back" onClick={() => this.setState({gameState: GameState.main})}>back</button>
+        <button className="back" onClick={() => {
+          clearTimeout(this.gameTimer);
+          this.setState({gameState: GameState.main});
+        }}>back</button>
       </div>;
     }
     if (this.state.gameState === GameState.tvSetEmpty) {
       return <div className="tvSetEmpty">
+        {common}
         <button className="back" onClick={() => this.setState({gameState: GameState.main})}>back</button>
       </div>;
     }
@@ -161,9 +181,17 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
           onMouseMove={this.onMouseMove}
           onMouseUp={this.onMouseUp}
           onTouchEnd={this.onMouseUp}
+          onClick={() => {
+            if (this.state.stars['channelResume'] && !this.state.stars['controllerResume']) {
+              this.state.stars['controllerResume'] = true;
+              this.state.items.controller.x = 60;
+              this.state.items.controller.y = 160;
+              this.forceUpdate();
+            }
+          }}
           style={{width: window.innerWidth, height: window.innerHeight, background: '#fff'}}>
           {common}
-          {!this.state.getController && Object.keys(this.state.items).map(i => <div
+          {(!this.state.getController || this.state.stars['controllerResume']) && Object.keys(this.state.items).map(i => <div
             className={i}
             key={i}
             ref={this.state.items[i].ref}
@@ -199,7 +227,16 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
         }}
       >
         <img className="bg-img" src={require('../../assets/level2_bg.png')}/>
-        <div className="tv-set" onClick={() => this.setState({gameState: this.state.getController ? GameState.tvSet : GameState.tvSetEmpty})}/>
+        <div className="tv-set" onClick={() => {
+          if (this.state.stars['channelResume']) {
+            return;
+          }
+          if (this.state.subLevel === '1') {
+            this.state.stars['tvFound'] = true;
+          }
+          const gameState = this.state.getController || this.state.subLevel === '1' ? GameState.tvSet : GameState.tvSetEmpty;
+          this.setState({gameState});
+        }}/>
         <div className="shelf2" onClick={() => this.state.subLevel === '2' && this.setState({gameState: GameState.shelf})}/>
         <div className="sofa2"/>
         {common}
