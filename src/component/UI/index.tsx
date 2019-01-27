@@ -19,6 +19,7 @@ interface IPropTypes extends RouteComponentProps<{}> {
   subLevel: number;
   starCount: number;
   countDown: number;
+  totalTime: number;
   onStart: () => void;
   onBack: () => void;
 }
@@ -46,15 +47,30 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
   }
 
   public renderCountDown() {
+    const scale = window.innerWidth / 414;
+    const factor = (scale - 1) / 2;
+    const {totalTime, countDown} = this.props;
+
     return (
-      <div className={cx('ui-countdown')}>
+      <div
+        className={cx('ui-countdown')}
+        style={{
+          transform: `scale(${scale}) translateX(${factor * 414}px)`
+        }}
+      >
         <div className={cx('ui-countdown-shoes')}>
           <img src={assets.getSrc('shoes1')} />
           <img src={assets.getSrc('shoes2')} />
         </div>
         <div className={cx('ui-countdown-bar')}>
           <img className={cx('ui-countdown-bar-box')} src={assets.getSrc('progress-box')} />
-          <img className={cx('ui-countdown-bar-bar')} src={assets.getSrc('progress-bar')} />
+          <img
+            className={cx('ui-countdown-bar-bar')}
+            src={assets.getSrc('progress-bar')}
+            style={{
+              transform: `scaleX(${countDown / totalTime})`
+            }}
+          />
           <img className={cx('ui-countdown-bar-mom')} src={assets.getSrc('mom-come-soon')} />
           <p className={cx('ui-countdown-bar-text')}>
             {this.props.countDown.toFixed(2)}

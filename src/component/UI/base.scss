@@ -45,6 +45,7 @@
         position: absolute;
         height: $height;
         right: 4px;
+        transform-origin: left;
       }
 
       &-box {
@@ -92,7 +93,7 @@
 
   &-button-back {
     position: absolute;
-    width: 20%;
+    width: 30%;
     right: 10%;
     bottom: 10%;
   }
