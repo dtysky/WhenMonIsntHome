@@ -6,7 +6,7 @@
  */
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
+import {HashRouter} from 'react-router-dom';
 import * as es6ObjectAssign from 'es6-object-assign';
 
 es6ObjectAssign.polyfill();
@@ -20,9 +20,9 @@ document.body.addEventListener('touchmove', function (e) {
 
 const render = () => {
   ReactDOM.render(
-    <BrowserRouter>
+    <HashRouter>
       <App />
-    </BrowserRouter>,
+    </HashRouter>,
     document.getElementById('container')
   );
 };
