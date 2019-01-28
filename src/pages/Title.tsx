@@ -45,6 +45,7 @@ export default class Title extends React.Component<IPropTypes, IStateTypes> {
         totalTime={1}
         onStart={() => {}}
         onBack={() => {}}
+        onBackTitle={() => this.props.history.push('/title')}
       />
     );
   }

@@ -374,6 +374,7 @@ class Level1 extends React.Component<IPropTypes, IStateTypes> {
           this.setState({state: 'idle'});
         }}
         onBack={() => this.props.history.push('/title')}
+        onBackTitle={() => this.props.history.push('/title')}
       >
         <p
           className={cx('level3-vigilance')}

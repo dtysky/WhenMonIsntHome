@@ -22,6 +22,7 @@ interface IPropTypes extends RouteComponentProps<{}> {
   totalTime: number;
   onStart: () => void;
   onBack: () => void;
+  onBackTitle: () => void;
 }
 
 interface IStateTypes {
@@ -157,14 +158,14 @@ class UI extends React.Component<IPropTypes, IStateTypes> {
               return;
             }
 
-            location.href = `/level/${level}/${subLevel}`;
+            this.props.history.push(`/level/${level}/${subLevel}`)
           }}
         />
         <div
           className={cx('ui-result-back')}
           onClick={() => {
             this.playSound();
-            this.props.onBack();
+            this.props.onBackTitle();
           }}
         />
       </div>

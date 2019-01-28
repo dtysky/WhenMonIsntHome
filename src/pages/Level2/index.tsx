@@ -175,7 +175,9 @@ class Level2 extends React.Component<IPropTypes, IStateTypes> {
         } else {
           this.setState({gameState: GameState.main});
         }
-      }}>
+      }}
+      onBackTitle={() => this.props.history.push('/title')}
+      >
       <audio
         src={require('../../assets/level3-bgm.mp3')}
         ref={this.bgm}
