@@ -23,7 +23,7 @@ module.exports = {
   output: {
     path: outPath,
     filename: '[name].[hash].js',
-    publicPath: '/'
+    publicPath: 'https://dtysky.github.io/WhenMonIsntHome/'
   },
 
   resolve: {
